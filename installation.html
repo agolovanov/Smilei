@@ -1,0 +1,563 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Install &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Write a namelist" href="namelist.html" />
+    <link rel="prev" title="Field ionization" href="field_ionization.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="namelist.html" title="Write a namelist"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="field_ionization.html" title="Field ionization"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<p>Before installing <strong class="program">Smilei</strong>, you need to install a few dependencies:</p>
+<ul class="simple">
+<li>A C++ compiler (we force standard c++11), optionally implementing openMP</li>
+<li>MPI libraries (<strong>openmpi</strong> recommended), supporting <code class="docutils literal"><span class="pre">MPI_THREAD_MULTIPLE</span></code></li>
+<li>HDF5 libraries compatible with your versions of C++ and MPI</li>
+<li>Python 2.7 (with header files)</li>
+<li><code class="docutils literal"><span class="pre">make</span></code></li>
+</ul>
+<p>Optional dependencies are:</p>
+<ul class="simple">
+<li>Git</li>
+<li>Doxygen</li>
+<li>Python modules: sphinx, h5py, numpy, matplotlib, pylab, pint</li>
+<li>ffmpeg</li>
+</ul>
+<p>On a large cluster, refer to the administrator to install these requirements.
+If you want to install <strong class="program">Smilei</strong> on your personal computer, refer to the following sections.</p>
+<p>To get some help on compilation and the environment variables you can change in order
+to have a successful compilation, you can type <code class="docutils literal"><span class="pre">make</span> <span class="pre">help</span></code>.</p>
+<hr class="docutils" />
+<div class="section" id="install-dependencies-on-mac">
+<h2>Install dependencies on Mac<a class="headerlink" href="#install-dependencies-on-mac" title="Permalink to this headline">¶</a></h2>
+<p>Even if it possible to install all dependencies manually, we recommend using a
+package manager software.</p>
+<div class="section" id="via-macports">
+<h3>Via Macports<a class="headerlink" href="#via-macports" title="Permalink to this headline">¶</a></h3>
+<p>This installation procedure relies on the software <a class="reference external" href="https://www.macports.org">MacPorts</a>
+that you can install following <a class="reference external" href="https://www.macports.org/install.php">these instructions</a>.</p>
+<ol class="arabic">
+<li><p class="first">In a terminal, run the following command to install the C++ compiler with MPI and HDF5:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo port install openmpi-gcc5 +threads
+sudo port <span class="k">select</span> --set mpi openmpi-gcc5-fortran
+sudo port install hdf5 +openmpi+gcc5+threads
+</pre></div>
+</div>
+</li>
+<li><p class="first">Edit your <code class="docutils literal"><span class="pre">.bash_profile</span></code> hidden file located in your home folder:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>open ~/.bash_profile
+</pre></div>
+</div>
+<p>and add the following lines at the end:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">SMILEICXX</span><span class="o">=</span>mpicxx
+<span class="nb">export</span> <span class="nv">HDF5_ROOT_DIR</span><span class="o">=</span>/opt/local
+</pre></div>
+</div>
+<p>Depending on your system, you might need to use <code class="docutils literal"><span class="pre">mpic++</span></code> instead of <code class="docutils literal"><span class="pre">mpicxx</span></code>.</p>
+</li>
+<li><p class="first">Python should be already installed by default, but in case you need
+a specific version, run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo port install python27
+sudo port <span class="k">select</span> --set python python27
+sudo port <span class="k">select</span> --set python2 python27
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you wish to run the Python post-processing scripts provided in <strong class="program">Smilei</strong>,
+you need several modules (numpy, matplotlib, pylab, h5py, sphinx, pint).
+We recommend to install <strong class="program">IPython</strong> which includes some of these.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo port install py27-ipython <span class="c1"># nicer python console</span>
+sudo port install py27-h5py    <span class="c1"># mandatory for opening any HDF5 file</span>
+sudo port install py27-pint    <span class="c1"># only for auto unit conversion</span>
+sudo port install py27-sphinx  <span class="c1"># only for building the doc</span>
+sudo port install doxygen      <span class="c1"># only for building the reference C++ doc</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="via-homebrew">
+<h3>Via HomeBrew<a class="headerlink" href="#via-homebrew" title="Permalink to this headline">¶</a></h3>
+<p>This installation procedure has been tested on OS X &#8220;El Capitan&#8221; 10.11.1</p>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="http://brew.sh">HomeBrew</a> does not need administrator privileges and can easily installed via:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ruby -e <span class="s2">&quot;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">install the following packages using <strong class="program">brew</strong> to be able to compile and run <strong class="program">smilei</strong></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>brew tap homebrew/science
+brew cask install java
+brew install makedepend
+brew install gcc
+brew install openmpi --with-mpi-thread-multiple
+brew install hdf5 --with-mpi
+brew install python
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now you need to set the <code class="docutils literal"><span class="pre">OMPI_CXX</span></code> to the homebrew <code class="docutils literal"><span class="pre">g++</span></code> (<code class="docutils literal"><span class="pre">g++-6</span></code> or similar):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">OMPI_CXX</span><span class="o">=</span>g++-6
+</pre></div>
+</div>
+</li>
+<li><p class="first">Alternatively you can put this line variable in a shell rc file (e.g. <code class="docutils literal"><span class="pre">.bash_profile</span></code>)
+or you can just add it before the <code class="docutils literal"><span class="pre">make</span></code> command (<code class="docutils literal"><span class="pre">OMPI_CXX=g++-6</span> <span class="pre">make</span></code> ...)</p>
+</li>
+<li><p class="first">now you can compile <strong class="program">smilei</strong> (see <a class="reference internal" href="#compile"><span class="std std-ref">Download and compile</span></a>)</p>
+</li>
+<li><p class="first">install the following extra packages (in order of importance)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+pip install ipython h5py pint sphinx matplotlib pylab
+brew install doxygen
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="install-dependencies-on-ubuntu">
+<h2>Install dependencies on Ubuntu<a class="headerlink" href="#install-dependencies-on-ubuntu" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="on-ubuntu-16-04">
+<h3>On Ubuntu 16.04<a class="headerlink" href="#on-ubuntu-16-04" title="Permalink to this headline">¶</a></h3>
+<p>Install the following packages from terminal:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install git openmpi-bin libhdf5-openmpi-dev build-essential python-dev
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="on-older-release">
+<h3>On older release<a class="headerlink" href="#on-older-release" title="Permalink to this headline">¶</a></h3>
+<p>A manual installation is required :</p>
+<ol class="arabic simple">
+<li>Download <a class="reference external" href="https://www.open-mpi.org/software/ompi">OpenMPI</a></li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>$ taz zxvf openmpi-1.10.2.tar.gz
+$ <span class="nb">cd</span> openmpi-1.10.2
+$ ./configure --prefix<span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/openmpi-1.10.2 --enable-mpi-thread-multiple --enable-mpirun-prefix-by-default
+$ make
+$ make install
+$ <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/openmpi-1.10.2/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+$ <span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/openmpi-1.10.2/lib:<span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>Download <a class="reference external" href="https://support.hdfgroup.org/HDF5">HDF5</a></li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>$ tar zxvf hdf5-1.8.16.tar.gz
+$ <span class="nb">cd</span> hdf5-1.8.16
+$ ./configure --prefix<span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/hdf5-1.8.16 --enable-parallel --with-pic --enable-linux-lfs --enable-shared --enable-production<span class="o">=</span>yes --disable-sharedlib-rpath --enable-static <span class="nv">CC</span><span class="o">=</span>mpicc <span class="nv">FC</span><span class="o">=</span>mpif90
+$ make
+$ make install
+$ <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/hdf5-1.8.16/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+$ <span class="nb">export</span> LD_LIBRARY_PATH <span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/hdf5-1.8.16/lib:<span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span>
+$ <span class="c1"># set HDF5 variable used in SMILEI makefile</span>
+$ <span class="nb">export</span> <span class="nv">HDF5_ROOT_DIR</span><span class="o">=</span><span class="si">${</span><span class="nv">INSTALL_DIR</span><span class="si">}</span>/hdf5-1.8.16
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="install-dependencies-on-other-systems">
+<h2>Install dependencies on other systems<a class="headerlink" href="#install-dependencies-on-other-systems" title="Permalink to this headline">¶</a></h2>
+<p>If you have successfully installed these dependencies on other platforms, please
+<a class="reference internal" href="partners.html"><span class="doc">contact us</span></a> and share!</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="download-and-compile">
+<span id="compile"></span><h2>Download and compile<a class="headerlink" href="#download-and-compile" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Download the latest <strong class="program">Smilei</strong> tarball <a class="reference internal" href="releases.html#latestversion"><span class="std std-ref">here</span></a>.</p>
+</li>
+<li><p class="first">Extract the tarball at the location of your choice.
+Let us assume it is located in your home directory <code class="docutils literal"><span class="pre">~/smilei/</span></code>.</p>
+</li>
+<li><p class="first">In a terminal, go to that location and compile:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/smilei
+make
+</pre></div>
+</div>
+<p class="rubric">Compilation alternatives:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make -j <span class="m">4</span>                    <span class="c1"># compile with 4 processors (fast)</span>
+make <span class="nv">config</span><span class="o">=</span>debug            <span class="c1"># to have debugging output (slow)</span>
+make <span class="nv">config</span><span class="o">=</span>noopenmp         <span class="c1"># to deactivate OpenMP support</span>
+make <span class="nv">config</span><span class="o">=</span><span class="s2">&quot;debug noopenmp&quot;</span> <span class="c1"># to activate debugging without OpenMP</span>
+</pre></div>
+</div>
+<p class="rubric">Machine dependent configurations:</p>
+<p>For some machine, it might be important to modify internal makefile variables.
+We suggest to add a file in the folder <code class="docutils literal"><span class="pre">scripts/CompileTools/machine/</span></code> and compile
+with:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make <span class="nv">machine</span><span class="o">=</span>my_machine
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It would be nice to share with developpers the makefile-machine files used on common
+supercomputers.</p>
+</div>
+<p class="rubric">Makefile alternatives:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make doc                     <span class="c1"># to compile the documentation</span>
+make install_python          <span class="c1"># install the Smilei python module</span>
+make unnstall_python         <span class="c1"># uninstall the Smilei python module</span>
+make print-XXX               <span class="c1"># print value of make variable XXX</span>
+make env                     <span class="c1"># print values of internal makefile variables</span>
+make <span class="nb">help</span>                    <span class="c1"># to get some help on compilation</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The next step is to <a class="reference internal" href="namelist.html"><span class="doc">write a namelist</span></a>.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Install</a><ul>
+<li><a class="reference internal" href="#install-dependencies-on-mac">Install dependencies on Mac</a><ul>
+<li><a class="reference internal" href="#via-macports">Via Macports</a></li>
+<li><a class="reference internal" href="#via-homebrew">Via HomeBrew</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#install-dependencies-on-ubuntu">Install dependencies on Ubuntu</a><ul>
+<li><a class="reference internal" href="#on-ubuntu-16-04">On Ubuntu 16.04</a></li>
+<li><a class="reference internal" href="#on-older-release">On older release</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#install-dependencies-on-other-systems">Install dependencies on other systems</a></li>
+<li><a class="reference internal" href="#download-and-compile">Download and compile</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/installation.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

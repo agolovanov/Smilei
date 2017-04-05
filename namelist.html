@@ -1,0 +1,2902 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Write a namelist &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Run" href="run.html" />
+    <link rel="prev" title="Install" href="installation.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="run.html" title="Run"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Install"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="write-a-namelist">
+<h1>Write a namelist<a class="headerlink" href="#write-a-namelist" title="Permalink to this headline">¶</a></h1>
+<p>Before you run <strong class="program">Smilei</strong>, you need a <em>namelist</em> (an input file). The namelist
+is written in the <em>python</em> language. It is thus recommended to know the basics of <em>python</em>.</p>
+<p>We suggest you copy one existing namelist from the folder <em>benchmarks</em>.
+All namelists have the extension <code class="docutils literal"><span class="pre">.py</span></code>.</p>
+<hr class="docutils" />
+<div class="section" id="general-rules">
+<h2>General rules<a class="headerlink" href="#general-rules" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong class="program">Smilei</strong> requires a few <em>blocks</em> to be defined, such as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Main</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">timestep</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>         <span class="c1"># defines the timestep value</span>
+    <span class="n">sim_length</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">],</span> <span class="c1"># defines the 2D box dimensions</span>
+    <span class="c1"># ...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Outside blocks, you can calculate anything you require.
+Inside a block, you must only define variables for <strong class="program">Smilei</strong>.</p>
+</li>
+<li><p class="first">The <em>python</em> syntax requires special indentation of each line.
+You begin with no indentation, but you have to <strong>add four spaces at the
+beginning of lines inside a group</strong>, and so on.
+For instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">timestep</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">timestep</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">timestep</span> <span class="o">=</span> <span class="mf">0.3</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You will need to use <a class="reference external" href="https://docs.python.org/2/tutorial/introduction.html#lists">lists</a>,
+which are series of things in <em>python</em>,
+defined between brackets <code class="docutils literal"><span class="pre">[]</span></code> and separated by commas.
+For example, <code class="docutils literal"><span class="pre">mean_velocity</span> <span class="pre">=</span> <span class="pre">[0.,</span> <span class="pre">1.1,</span> <span class="pre">3.]</span></code>.</p>
+</li>
+<li><p class="first">You are free to import any installed <em>python</em> package into the namelist.
+For instance, you may obtain <span class="math">\(\pi\)</span> using <code class="docutils literal"><span class="pre">from</span> <span class="pre">math</span> <span class="pre">import</span> <span class="pre">pi</span></code>.</p>
+</li>
+<li><p class="first">All quantities are normalized to arbitrary values: see <a class="reference internal" href="units.html"><span class="doc">Units</span></a>.</p>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="python-workflow">
+<h2>Python workflow<a class="headerlink" href="#python-workflow" title="Permalink to this headline">¶</a></h2>
+<p><em>Python</em> is started at the beginning of the simulation (one <em>python</em> interpreter
+for each MPI node). The following steps are executed:</p>
+<ol class="arabic simple">
+<li>A few variables from <strong class="program">Smilei</strong> are passed to <em>python</em> so that they are
+available to the user:<ul>
+<li>The rank of the current MPI node as <a class="reference internal" href="#smilei_mpi_rank" title="smilei_mpi_rank"><code class="xref py py-data docutils literal"><span class="pre">smilei_mpi_rank</span></code></a>.</li>
+<li>The total number of MPI nodes as <a class="reference internal" href="#smilei_mpi_size" title="smilei_mpi_size"><code class="xref py py-data docutils literal"><span class="pre">smilei_mpi_size</span></code></a>.</li>
+<li>The maximum random integer as <a class="reference internal" href="#smilei_rand_max" title="smilei_rand_max"><code class="xref py py-data docutils literal"><span class="pre">smilei_rand_max</span></code></a>.</li>
+</ul>
+</li>
+<li>The namelist(s) is executed.</li>
+<li><em>Python</em> runs <code class="xref py py-data docutils literal"><span class="pre">cleanup()</span></code> if the user has defined it
+(this can be a good place to delete unused heavy variables and unload unused modules).</li>
+<li><em>Python</em> checks whether the <em>python</em> interpreter is needed during the simulation
+(e.g. the user has defined a temporal <a class="reference internal" href="#profiles"><span class="std std-ref">profile</span></a> which requires <em>python</em>
+to calculate it every timestep). Otherwise, <em>python</em> is stopped.</li>
+</ol>
+<p>All these instructions are summarized in a file <code class="docutils literal"><span class="pre">smilei.py</span></code>,
+so that the user can directly run <code class="docutils literal"><span class="pre">python</span> <span class="pre">-i</span> <span class="pre">smilei.py</span></code> for post-processing purposes.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="main-variables">
+<h2>Main variables<a class="headerlink" href="#main-variables" title="Permalink to this headline">¶</a></h2>
+<p>The block <code class="docutils literal"><span class="pre">Main</span></code> is <strong>mandatory</strong> and has the following syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Main</span><span class="p">(</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="s2">&quot;1d3v&quot;</span><span class="p">,</span>
+    <span class="n">interpolation_order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">sim_length</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">16.</span> <span class="p">],</span>
+    <span class="n">cell_length</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">],</span>
+    <span class="n">sim_time</span>    <span class="o">=</span> <span class="mf">15.</span><span class="p">,</span>
+    <span class="n">timestep</span>    <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span>
+    <span class="n">number_of_patches</span> <span class="o">=</span> <span class="p">[</span><span class="mi">64</span><span class="p">],</span>
+    <span class="n">clrw</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">maxwell_sol</span> <span class="o">=</span> <span class="s1">&#39;Yee&#39;</span><span class="p">,</span>
+    <span class="n">bc_em_type_x</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;silver-muller&quot;</span><span class="p">,</span> <span class="s2">&quot;silver-muller&quot;</span><span class="p">],</span>
+    <span class="n">bc_em_type_y</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;silver-muller&quot;</span><span class="p">,</span> <span class="s2">&quot;silver-muller&quot;</span><span class="p">],</span>
+    <span class="n">time_fields_frozen</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">referenceAngularFrequency_SI</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">print_every</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="geometry">
+<code class="descname">geometry</code><a class="headerlink" href="#geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>The geometry of the simulation: <code class="docutils literal"><span class="pre">&quot;1d3v&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;2d3v&quot;</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">1d</span></code> or <code class="docutils literal"><span class="pre">2d</span></code> correspond to the number of spatial dimensions.
+<code class="docutils literal"><span class="pre">3v</span></code> indicates the number of dimensions for velocities.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="interpolation_order">
+<code class="descname">interpolation_order</code><a class="headerlink" href="#interpolation_order" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">2</td>
+</tr>
+</tbody>
+</table>
+<p>Interpolation order. To this day, only <code class="docutils literal"><span class="pre">2</span></code> is available.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="sim_length">
+<code class="descname">sim_length</code><a class="headerlink" href="#sim_length" title="Permalink to this definition">¶</a></dt>
+<dt id="number_of_cells">
+<code class="descname">number_of_cells</code><a class="headerlink" href="#number_of_cells" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>A list of floats: size of the simulation box for each dimension of the simulation.</dt>
+<dd><ul class="first last simple">
+<li>Either <code class="docutils literal"><span class="pre">sim_length</span></code>, the simulation length in each direction in units of <span class="math">\(L_r\)</span>,</li>
+<li>or <code class="docutils literal"><span class="pre">number_of_cells</span></code>, the number of cells in each direction.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="cell_length">
+<code class="descname">cell_length</code><a class="headerlink" href="#cell_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of floats: sizes of one cell in each direction in units of <span class="math">\(L_r\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="sim_time">
+<code class="descname">sim_time</code><a class="headerlink" href="#sim_time" title="Permalink to this definition">¶</a></dt>
+<dt id="number_of_timesteps">
+<code class="descname">number_of_timesteps</code><a class="headerlink" href="#number_of_timesteps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Duration of the simulation.</dt>
+<dd><ul class="first last simple">
+<li>Either <code class="docutils literal"><span class="pre">sim_time</span></code>, the simulation duration in units of <span class="math">\(T_r\)</span>,</li>
+<li>or <code class="docutils literal"><span class="pre">number_of_timesteps</span></code>, the total number of timesteps.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="timestep">
+<code class="descname">timestep</code><a class="headerlink" href="#timestep" title="Permalink to this definition">¶</a></dt>
+<dt id="timestep_over_CFL">
+<code class="descname">timestep_over_CFL</code><a class="headerlink" href="#timestep_over_CFL" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Duration of one timestep.</dt>
+<dd><ul class="first last simple">
+<li>Either <code class="docutils literal"><span class="pre">timestep</span></code>, in units of <span class="math">\(T_r\)</span>,</li>
+<li>or <code class="docutils literal"><span class="pre">timestep_over_CFL</span></code>, in units of the <em>Courant–Friedrichs–Lewy</em> (CFL) time.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="number_of_patches">
+<code class="descname">number_of_patches</code><a class="headerlink" href="#number_of_patches" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of integers: the number of patches in each direction.
+Each integer must be a power of 2, and the total number of patches must be
+greater or equal than the number of MPI processes.
+See <a class="reference internal" href="parallelization.html"><span class="doc">Parallelization basics</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="clrw">
+<code class="descname">clrw</code><a class="headerlink" href="#clrw" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Cluster width.
+<span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="maxwell_sol">
+<code class="descname">maxwell_sol</code><a class="headerlink" href="#maxwell_sol" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">&#8216;Yee&#8217;</td>
+</tr>
+</tbody>
+</table>
+<p>The solver for Maxwell&#8217;s equations. Only <code class="docutils literal"><span class="pre">&quot;Yee&quot;</span></code> is available at the moment.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="solve_poisson">
+<code class="descname">solve_poisson</code><a class="headerlink" href="#solve_poisson" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">True</td>
+</tr>
+</tbody>
+</table>
+<p>Decides if Poisson correction must be applied or not initially.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="poisson_iter_max">
+<code class="descname">poisson_iter_max</code><a class="headerlink" href="#poisson_iter_max" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">50000</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum number of iteration for the Poisson solver.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="poisson_error_max">
+<code class="descname">poisson_error_max</code><a class="headerlink" href="#poisson_error_max" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1e-14</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum error for the Poisson solver.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="bc_em_type_x">
+<code class="descname">bc_em_type_x</code><a class="headerlink" href="#bc_em_type_x" title="Permalink to this definition">¶</a></dt>
+<dt id="bc_em_type_y">
+<code class="descname">bc_em_type_y</code><a class="headerlink" href="#bc_em_type_y" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">lists of two strings: <code class="docutils literal"><span class="pre">[bc_min,</span> <span class="pre">bc_max]</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[&quot;periodic&quot;,</span> <span class="pre">&quot;periodic&quot;]</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The boundary conditions for the electromagnetic fields.
+The strings <code class="docutils literal"><span class="pre">bc_min</span></code> and <code class="docutils literal"><span class="pre">bc_max</span></code> must be one of the following choices:
+<code class="docutils literal"><span class="pre">&quot;periodic&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;silver-muller&quot;</span></code>, or <code class="docutils literal"><span class="pre">&quot;reflective&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="time_fields_frozen">
+<code class="descname">time_fields_frozen</code><a class="headerlink" href="#time_fields_frozen" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Time, at the beginning of the simulation, during which fields are frozen.</p>
+</dd></dl>
+
+<span class="target" id="referenceangularfrequency-si"></span><dl class="data">
+<dt id="referenceAngularFrequency_SI">
+<code class="descname">referenceAngularFrequency_SI</code><a class="headerlink" href="#referenceAngularFrequency_SI" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of the reference angular frequency <span class="math">\(\omega_r\)</span> in SI units,
+<strong>only needed when collisions or ionization are requested</strong>.
+This frequency is related to the normalization length according to <span class="math">\(L_r\omega_r = c\)</span>
+(see <a class="reference internal" href="units.html"><span class="doc">Units</span></a>).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="print_every">
+<code class="descname">print_every</code><a class="headerlink" href="#print_every" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of timesteps between each info output on screen. By default, 10 outputs per
+simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="random_seed">
+<code class="descname">random_seed</code><a class="headerlink" href="#random_seed" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">the machine clock</td>
+</tr>
+</tbody>
+</table>
+<p>The value of the random seed. To create a per-processor random seed, you may use
+the variable  <a class="reference internal" href="#smilei_mpi_rank" title="smilei_mpi_rank"><code class="xref py py-data docutils literal"><span class="pre">smilei_mpi_rank</span></code></a>.</p>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="load-balancing">
+<h2>Load Balancing<a class="headerlink" href="#load-balancing" title="Permalink to this headline">¶</a></h2>
+<p>The block <code class="docutils literal"><span class="pre">LoadBalancing</span></code> is optional. If you do not define it, load balancing will
+occur every 150 iterations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">LoadBalancing</span><span class="p">(</span>
+    <span class="n">initial_balance</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="n">coef_cell</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">coef_frozen</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="initial_balance">
+<code class="descname">initial_balance</code><a class="headerlink" href="#initial_balance" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">True</td>
+</tr>
+</tbody>
+</table>
+<p>Decides if the load must be balanced at initialization. If not, the same amount of
+patches will be attributed to each MPI rank.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="every">
+<code class="descname">every</code><a class="headerlink" href="#every" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">150</td>
+</tr>
+</tbody>
+</table>
+<p>An integer: the number of timesteps between each load balancing (patches are
+exchanged between MPI processes to reduce load imbalance).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="coef_cell">
+<code class="descname">coef_cell</code><a class="headerlink" href="#coef_cell" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="coef_frozen">
+<code class="descname">coef_frozen</code><a class="headerlink" href="#coef_frozen" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">0.1</td>
+</tr>
+</tbody>
+</table>
+<p><span class="red">to do</span></p>
+</dd></dl>
+
+<hr class="docutils" />
+</div>
+<div class="section" id="moving-window">
+<span id="movingwindow"></span><h2>Moving window<a class="headerlink" href="#moving-window" title="Permalink to this headline">¶</a></h2>
+<p>The block <code class="docutils literal"><span class="pre">MovingWindow</span></code> is optional. The window does not move it you do not define it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">MovingWindow</span><span class="p">(</span>
+    <span class="n">time_start</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">velocity_x</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="time_start">
+<code class="descname">time_start</code><a class="headerlink" href="#time_start" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The time at which the window starts moving.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="velocity_x">
+<code class="descname">velocity_x</code><a class="headerlink" href="#velocity_x" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The velocity of the moving window in the <cite>x</cite> direction.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <a class="reference internal" href="#diagparticles"><span class="std std-ref">particle diagnostics</span></a> accept an &#8220;axis&#8221; called <code class="docutils literal"><span class="pre">moving_x</span></code>
+corresponding to the <cite>x</cite> coordinate corrected by the moving window&#8217;s current movement.</p>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="species">
+<span id="id1"></span><h2>Species<a class="headerlink" href="#species" title="Permalink to this headline">¶</a></h2>
+<p>Each species has to be defined in a <code class="docutils literal"><span class="pre">Species</span></code> block:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Species</span><span class="p">(</span>
+    <span class="n">species_type</span>      <span class="o">=</span> <span class="s2">&quot;electrons1&quot;</span><span class="p">,</span>
+    <span class="n">initPosition_type</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
+    <span class="n">initMomentum_type</span> <span class="o">=</span> <span class="s2">&quot;maxwell-juettner&quot;</span><span class="p">,</span>
+    <span class="n">n_part_per_cell</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">mass</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">atomic_number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">nb_density</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span>
+    <span class="c1"># charge_density = None,</span>
+    <span class="n">charge</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>
+    <span class="n">mean_velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-10</span><span class="p">],</span>
+    <span class="n">bc_part_type_xmin</span> <span class="o">=</span> <span class="s2">&quot;refl&quot;</span><span class="p">,</span>
+    <span class="n">bc_part_type_xmax</span> <span class="o">=</span> <span class="s2">&quot;refl&quot;</span><span class="p">,</span>
+    <span class="c1"># bc_part_type_ymax = None,</span>
+    <span class="c1"># bc_part_type_ymin = None,</span>
+    <span class="c1"># thermT = None,</span>
+    <span class="c1"># thermVelocity = None,</span>
+    <span class="n">time_frozen</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="c1"># ionization_model = &quot;none&quot;,</span>
+    <span class="c1"># ionization_electrons = None,</span>
+    <span class="c1"># radiating = False,</span>
+    <span class="n">isTest</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">track_every</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">track_flush_every</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">c_part_max</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">dynamics_type</span> <span class="o">=</span> <span class="s2">&quot;norm&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="species_type">
+<code class="descname">species_type</code><a class="headerlink" href="#species_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name you want to give to this species.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="initPosition_type">
+<code class="descname">initPosition_type</code><a class="headerlink" href="#initPosition_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The initialization of particle positions:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">&quot;regular&quot;</span></code> for regularly spaced</li>
+<li><code class="docutils literal"><span class="pre">&quot;random&quot;</span></code> for randomly distributed</li>
+<li><code class="docutils literal"><span class="pre">&quot;centered&quot;</span></code> for centered in each cell</li>
+</ul>
+</dd></dl>
+
+<dl class="data">
+<dt id="initMomentum_type">
+<code class="descname">initMomentum_type</code><a class="headerlink" href="#initMomentum_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The initialization of particle momenta:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">&quot;maxwell-juettner&quot;</span></code> for a relativistic maxwellian (see <a class="reference internal" href="maxwell-juttner.html"><span class="doc">how it is done</span></a>)</li>
+<li><code class="docutils literal"><span class="pre">&quot;rectangular&quot;</span></code> for a rectangular distribution</li>
+<li><code class="docutils literal"><span class="pre">&quot;cold&quot;</span></code> for zero temperature</li>
+</ul>
+<p>The first 2 distributions depend on the parameter <a class="reference internal" href="#temperature" title="temperature"><code class="xref py py-data docutils literal"><span class="pre">temperature</span></code></a> explained below.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="n_part_per_cell">
+<code class="descname">n_part_per_cell</code><a class="headerlink" href="#n_part_per_cell" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The number of particles per cell.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mass">
+<code class="descname">mass</code><a class="headerlink" href="#mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of particles, in units of the electron mass <span class="math">\(m_e\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="atomic_number">
+<code class="descname">atomic_number</code><a class="headerlink" href="#atomic_number" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">0</td>
+</tr>
+</tbody>
+</table>
+<p>The atomic number of the particles, required only for ionization.
+It must be lower than 101.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="nb_density">
+<code class="descname">nb_density</code><a class="headerlink" href="#nb_density" title="Permalink to this definition">¶</a></dt>
+<dt id="charge_density">
+<code class="descname">charge_density</code><a class="headerlink" href="#charge_density" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The absolute value of the number density or charge density (choose one only)
+of the particle distribution, in units of the reference density <span class="math">\(N_r\)</span> (see <a class="reference internal" href="units.html"><span class="doc">Units</span></a>).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="charge">
+<code class="descname">charge</code><a class="headerlink" href="#charge" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The particle charge, in units of the elementary charge <span class="math">\(e\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mean_velocity">
+<code class="descname">mean_velocity</code><a class="headerlink" href="#mean_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a list of 3 floats or <em>python</em> functions (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The initial drift velocity of the particles, in units of the speed of light <span class="math">\(c\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="temperature">
+<code class="descname">temperature</code><a class="headerlink" href="#temperature" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a list of 3 floats or <em>python</em> functions (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The initial temperature of the particles, in units of <span class="math">\(m_ec^2\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="bc_part_type_xmin">
+<code class="descname">bc_part_type_xmin</code><a class="headerlink" href="#bc_part_type_xmin" title="Permalink to this definition">¶</a></dt>
+<dt id="bc_part_type_xmax">
+<code class="descname">bc_part_type_xmax</code><a class="headerlink" href="#bc_part_type_xmax" title="Permalink to this definition">¶</a></dt>
+<dt id="bc_part_type_ymin">
+<code class="descname">bc_part_type_ymin</code><a class="headerlink" href="#bc_part_type_ymin" title="Permalink to this definition">¶</a></dt>
+<dt id="bc_part_type_ymax">
+<code class="descname">bc_part_type_ymax</code><a class="headerlink" href="#bc_part_type_ymax" title="Permalink to this definition">¶</a></dt>
+<dd><p>The boundary condition for particles: <code class="docutils literal"><span class="pre">&quot;refl&quot;</span></code> for <em>reflecting</em>, <code class="docutils literal"><span class="pre">&quot;supp&quot;</span></code> for
+<em>suppressing</em>, <code class="docutils literal"><span class="pre">&quot;stop&quot;</span></code> for <em>stopping</em>, <code class="docutils literal"><span class="pre">&quot;periodic&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;thermalize&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="thermT">
+<code class="descname">thermT</code><a class="headerlink" href="#thermT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="thermVelocity">
+<code class="descname">thermVelocity</code><a class="headerlink" href="#thermVelocity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="time_frozen">
+<code class="descname">time_frozen</code><a class="headerlink" href="#time_frozen" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The time during which the particle positions are not updated, in units of <span class="math">\(T_r\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="ionization_model">
+<code class="descname">ionization_model</code><a class="headerlink" href="#ionization_model" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;none&quot;</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The model for field ionization. Currently, only <code class="docutils literal"><span class="pre">&quot;tunnel&quot;</span></code> is available.
+See <a class="reference internal" href="#collisionalionization"><span class="std std-ref">this</span></a> for collisional ionization instead.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="ionization_electrons">
+<code class="descname">ionization_electrons</code><a class="headerlink" href="#ionization_electrons" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the electron species that field ionization uses when creating new electrons.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="radiating">
+<code class="descname">radiating</code><a class="headerlink" href="#radiating" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">False</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="isTest">
+<code class="descname">isTest</code><a class="headerlink" href="#isTest" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">False</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Flag for test particles. If <code class="docutils literal"><span class="pre">True</span></code>, this species will contain only test particles
+which do not participate in the charge and currents.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="track_every">
+<code class="descname">track_every</code><a class="headerlink" href="#track_every" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">0</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps between each output of particles trajectories, <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.
+If non-zero, the particles positions will be tracked and written in a file named <code class="docutils literal"><span class="pre">TrackParticles_abc.h5</span></code>
+(where <code class="docutils literal"><span class="pre">abc</span></code> is <a class="reference internal" href="#species_type" title="species_type"><code class="xref py py-data docutils literal"><span class="pre">species_type</span></code></a>).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="track_flush_every">
+<code class="descname">track_flush_every</code><a class="headerlink" href="#track_flush_every" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+<p>When <a class="reference internal" href="#track_flush_every" title="track_flush_every"><code class="xref py py-data docutils literal"><span class="pre">track_flush_every</span></code></a> coincides with <a class="reference internal" href="#track_every" title="track_every"><code class="xref py py-data docutils literal"><span class="pre">track_every</span></code></a>, the output
+file for tracked particles is actually written (&#8220;flushed&#8221; from the buffer). Flushing
+too often can <em>dramatically</em> slow down the simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="c_part_max">
+<code class="descname">c_part_max</code><a class="headerlink" href="#c_part_max" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dynamics_type">
+<code class="descname">dynamics_type</code><a class="headerlink" href="#dynamics_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="red">to do</span></p>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="lasers">
+<h2>Lasers<a class="headerlink" href="#lasers" title="Permalink to this headline">¶</a></h2>
+<p>A laser consists in applying oscillating boundary conditions for the magnetic
+field on one of the box sides. The only boundary conditions that support lasers
+are <code class="docutils literal"><span class="pre">&quot;silver-muller&quot;</span></code> (see <a class="reference internal" href="#bc_em_type_x" title="bc_em_type_x"><code class="xref py py-data docutils literal"><span class="pre">bc_em_type_x</span></code></a>).
+There are several syntaxes to introduce a laser in <strong class="program">Smilei</strong>:</p>
+<p class="rubric">1. Defining a generic wave</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Laser</span><span class="p">(</span>
+    <span class="n">boxSide</span> <span class="o">=</span> <span class="s2">&quot;xmin&quot;</span><span class="p">,</span>
+    <span class="n">space_time_profile</span> <span class="o">=</span> <span class="p">[</span> <span class="n">By_profile</span><span class="p">,</span> <span class="n">Bz_profile</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="boxSide">
+<code class="descname">boxSide</code><a class="headerlink" href="#boxSide" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;xmin&quot;</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Side of the box from which the laser originates: at the moment, only <code class="docutils literal"><span class="pre">&quot;xmin&quot;</span></code> and
+<code class="docutils literal"><span class="pre">&quot;xmax&quot;</span></code> are supported.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="space_time_profile">
+<code class="descname">space_time_profile</code><a class="headerlink" href="#space_time_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of two <em>python</em> functions</td>
+</tr>
+</tbody>
+</table>
+<p>The full wave expression at the chosen box side. It is a list of <strong>two</strong> <em>python</em>
+functions taking several arguments depending on the simulation dimension:
+<span class="math">\((t)\)</span> for a 1-D simulation, <span class="math">\((y,t)\)</span> for a 2-D simulation (etc.)
+The two functions represent <span class="math">\(B_y\)</span> and <span class="math">\(B_z\)</span>, respectively.</p>
+</dd></dl>
+
+</div></blockquote>
+<p class="rubric">2. Defining the wave envelopes</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Laser</span><span class="p">(</span>
+    <span class="n">boxSide</span>        <span class="o">=</span> <span class="s2">&quot;xmin&quot;</span><span class="p">,</span>
+    <span class="n">omega</span>          <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">chirp_profile</span>  <span class="o">=</span> <span class="n">tconstant</span><span class="p">(),</span>
+    <span class="n">time_envelope</span>  <span class="o">=</span> <span class="n">tgaussian</span><span class="p">(),</span>
+    <span class="n">space_envelope</span> <span class="o">=</span> <span class="p">[</span> <span class="n">By_profile</span>  <span class="p">,</span> <span class="n">Bz_profile</span>   <span class="p">],</span>
+    <span class="n">phase</span>          <span class="o">=</span> <span class="p">[</span> <span class="n">PhiY_profile</span><span class="p">,</span> <span class="n">PhiZ_profile</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This implements a wave of the form:</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}B_y(\mathbf{x}, t) = S_y(\mathbf{x})\; T\left[t-\phi_y(\mathbf{x})/\omega(t)\right]
+\;\sin\left( \omega(t) t - \phi_y(\mathbf{x}) \right)\\B_z(\mathbf{x}, t) = S_z(\mathbf{x})\; T\left[t-\phi_z(\mathbf{x})/\omega(t)\right]
+\;\sin\left( \omega(t) t - \phi_z(\mathbf{x}) \right)\end{aligned}\end{align} \]</div>
+<p>where <span class="math">\(T\)</span> is the temporal envelope, <span class="math">\(S_y\)</span> and <span class="math">\(S_y\)</span> are the
+spatial envelopes, <span class="math">\(\omega\)</span> is the time-varying frequency, and
+<span class="math">\(\phi_y\)</span> and <span class="math">\(\phi_z\)</span> are the phases.</p>
+<dl class="data">
+<dt id="omega">
+<code class="descname">omega</code><a class="headerlink" href="#omega" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The laser angular frequency.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="chirp_profile">
+<code class="descname">chirp_profile</code><a class="headerlink" href="#chirp_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a <em>python</em> function or a <a class="reference internal" href="#profiles"><span class="std std-ref">time profile</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">tconstant()</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The variation of the laser frequency over time, such that
+<span class="math">\(\omega(t)=\mathtt{omega}\times\mathtt{chirp\_profile}(t)\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="time_envelope">
+<code class="descname">time_envelope</code><a class="headerlink" href="#time_envelope" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a <em>python</em> function or a <a class="reference internal" href="#profiles"><span class="std std-ref">time profile</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">tconstant()</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The temporal envelope of the laser.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="space_envelope">
+<code class="descname">space_envelope</code><a class="headerlink" href="#space_envelope" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a list of two <em>python</em> functions or two <a class="reference internal" href="#profiles"><span class="std std-ref">spatial profiles</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[</span> <span class="pre">1.,</span> <span class="pre">0.</span> <span class="pre">]</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The two spatial envelopes <span class="math">\(S_y\)</span> and <span class="math">\(S_z\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="phase">
+<code class="descname">phase</code><a class="headerlink" href="#phase" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">a list of two <em>python</em> functions or two <a class="reference internal" href="#profiles"><span class="std std-ref">spatial profiles</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[</span> <span class="pre">0.,</span> <span class="pre">0.</span> <span class="pre">]</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The two spatially-varying phases <span class="math">\(\phi_y\)</span> and <span class="math">\(\phi_z\)</span>.</p>
+</dd></dl>
+
+</div></blockquote>
+<p class="rubric">3. Defining a 1D planar wave</p>
+<blockquote>
+<div><p>For one-dimensional simulations, you may use the simplified laser creator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LaserPlanar1D</span><span class="p">(</span>
+    <span class="n">boxSide</span>         <span class="o">=</span> <span class="s2">&quot;xmin&quot;</span><span class="p">,</span>
+    <span class="n">a0</span>              <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">omega</span>           <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">polarizationPhi</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">ellipticity</span>     <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">time_envelope</span>   <span class="o">=</span> <span class="n">tconstant</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="a0">
+<code class="descname">a0</code><a class="headerlink" href="#a0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The normalized vector potential</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="polarizationPhi">
+<code class="descname">polarizationPhi</code><a class="headerlink" href="#polarizationPhi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The angle of the polarization ellipse major axis relative to the X-Y plane, in radians.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="ellipticity">
+<code class="descname">ellipticity</code><a class="headerlink" href="#ellipticity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The polarization ellipticity: 0 for linear and <span class="math">\(\pm 1\)</span> for circular.</p>
+</dd></dl>
+
+</div></blockquote>
+<p class="rubric">4. Defining a 2D gaussian wave</p>
+<blockquote>
+<div><p>For two-dimensional simulations, you may use the simplified laser creator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LaserGaussian2D</span><span class="p">(</span>
+    <span class="n">boxSide</span>         <span class="o">=</span> <span class="s2">&quot;xmin&quot;</span><span class="p">,</span>
+    <span class="n">a0</span>              <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">omega</span>           <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">focus</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">50.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">],</span>
+    <span class="n">waist</span>           <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span>
+    <span class="n">incidence_angle</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">polarizationPhi</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">ellipticity</span>     <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">time_envelope</span>   <span class="o">=</span> <span class="n">tconstant</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="focus">
+<code class="descname">focus</code><a class="headerlink" href="#focus" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of two floats <code class="docutils literal"><span class="pre">[X,</span> <span class="pre">Y]</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal"><span class="pre">X</span></code> and <code class="docutils literal"><span class="pre">Y</span></code> positions of the laser focus.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="waist">
+<code class="descname">waist</code><a class="headerlink" href="#waist" title="Permalink to this definition">¶</a></dt>
+<dd><p>The waist value. Transverse coordinate at which the field is at 1/e of its maximum value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="incidence_angle">
+<code class="descname">incidence_angle</code><a class="headerlink" href="#incidence_angle" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The angle of the laser beam relative to the X axis, in radians.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">time_envelope</code></dt>
+<dd><p>Time envelope of the field (not intensity).</p>
+</dd></dl>
+
+</div></blockquote>
+<p class="rubric">5. Defining a 3D gaussian wave</p>
+<blockquote>
+<div><p>For three-dimensional simulations, you may use the simplified laser creator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LaserGaussian3D</span><span class="p">(</span>
+    <span class="n">boxSide</span>         <span class="o">=</span> <span class="s2">&quot;xmin&quot;</span><span class="p">,</span>
+    <span class="n">a0</span>              <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">omega</span>           <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span>
+    <span class="n">focus</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">50.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">],</span>
+    <span class="n">waist</span>           <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span>
+    <span class="n">incidence_angle</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+    <span class="n">polarizationPhi</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">ellipticity</span>     <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+    <span class="n">time_envelope</span>   <span class="o">=</span> <span class="n">tconstant</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This is almost the same as <code class="docutils literal"><span class="pre">LaserGaussian2D</span></code>, with the <code class="docutils literal"><span class="pre">focus</span></code> parameter having
+now 3 elements (focus position in 3D), and the <code class="docutils literal"><span class="pre">incidence_angle</span></code> being a list of
+two angles, corresponding to rotations around <cite>y</cite> and <cite>z</cite>, respectively.</p>
+</div></blockquote>
+<hr class="docutils" />
+</div>
+<div class="section" id="external-fields">
+<span id="extfield"></span><h2>External fields<a class="headerlink" href="#external-fields" title="Permalink to this headline">¶</a></h2>
+<p>An external field can be applied using an <code class="docutils literal"><span class="pre">ExtField</span></code> block:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ExtField</span><span class="p">(</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ex&quot;</span><span class="p">],</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">constant</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">xvacuum</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="field">
+<code class="descname">field</code><a class="headerlink" href="#field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Field name: <code class="docutils literal"><span class="pre">&quot;Ex&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ey&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ez&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Bx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;By&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;Bz&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="profile">
+<code class="descname">profile</code><a class="headerlink" href="#profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The initial spatial profile of the applied field.
+Refer to <a class="reference internal" href="units.html"><span class="doc">Units</span></a> to understand the units of this field.</p>
+</dd></dl>
+
+<hr class="docutils" />
+</div>
+<div class="section" id="antennas">
+<span id="id2"></span><h2>Antennas<a class="headerlink" href="#antennas" title="Permalink to this headline">¶</a></h2>
+<p>An antenna is an extra current applied during the whole simulation.
+It is applied using an <code class="docutils literal"><span class="pre">Antenna</span></code> block:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Antenna</span><span class="p">(</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="s2">&quot;Jz&quot;</span><span class="p">,</span>
+    <span class="n">space_profile</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="mf">0.01</span><span class="p">),</span>
+    <span class="n">time_profile</span> <span class="o">=</span> <span class="n">tcosine</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt>
+<code class="descname">field</code></dt>
+<dd><p>The name of the current: <code class="docutils literal"><span class="pre">&quot;Jx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jy&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;Jz&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="space_profile">
+<code class="descname">space_profile</code><a class="headerlink" href="#space_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The initial spatial profile of the applied antenna.
+Refer to <a class="reference internal" href="units.html"><span class="doc">Units</span></a> to understand the units of this current.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="time_profile">
+<code class="descname">time_profile</code><a class="headerlink" href="#time_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float or <em>python</em> function (see section <a class="reference internal" href="#profiles"><span class="std std-ref">Profiles</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The temporal profile of the applied antenna. It multiplies <code class="docutils literal"><span class="pre">space_profile</span></code>.</p>
+</dd></dl>
+
+<hr class="docutils" />
+</div>
+<div class="section" id="profiles">
+<span id="id3"></span><h2>Profiles<a class="headerlink" href="#profiles" title="Permalink to this headline">¶</a></h2>
+<p>Several quantities require the input of a profile: particle charge, particle density,
+external fields, etc. Depending on the case, they can be <em>spatial</em> or <em>temporal</em>
+profiles.</p>
+<p class="rubric">1. Constant profiles</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">Species(</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">charge</span> <span class="pre">=</span> <span class="pre">-3.,</span> <span class="pre">...</span> <span class="pre">)</span></code> defines a species with charge <span class="math">\(Z^\star=3\)</span>.</li>
+<li><code class="docutils literal"><span class="pre">Species(</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">nb_density</span> <span class="pre">=</span> <span class="pre">10.,</span> <span class="pre">...</span> <span class="pre">)</span></code> defines a species with density <span class="math">\(10\,N_r\)</span>.
+You can choose <code class="docutils literal"><span class="pre">nb_density</span></code> (<em>number density</em>) or <code class="docutils literal"><span class="pre">charge_density</span></code></li>
+<li><code class="docutils literal"><span class="pre">Species(</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">mean_velocity</span> <span class="pre">=</span> <span class="pre">[0.05,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">...</span> <span class="pre">)</span></code> defines a species
+with drift velocity <span class="math">\(v_x = 0.05\,c\)</span> over the whole box.</li>
+<li><code class="docutils literal"><span class="pre">Species(...,</span> <span class="pre">initMomentum_type=&quot;maxwell-juettner&quot;,</span> <span class="pre">temperature=[1e-5],</span> <span class="pre">...)</span></code> defines
+a species with a Maxwell-Jüttner distribution of temperature <span class="math">\(T = 10^{-5}\,m_ec^2\)</span> over the whole box.
+Note that the temperature may be anisotropic: <code class="docutils literal"><span class="pre">temperature=[1e-5,</span> <span class="pre">2e-5,</span> <span class="pre">2e-5]</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">Species(</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">n_part_per_cell</span> <span class="pre">=</span> <span class="pre">10.,</span> <span class="pre">...</span> <span class="pre">)</span></code> defines a species with 10 particles per cell.</li>
+<li><code class="docutils literal"><span class="pre">ExtField(</span> <span class="pre">field=&quot;Bx&quot;,</span> <span class="pre">profile=0.1</span> <span class="pre">)</span></code> defines a constant external field <span class="math">\(B_x = 0.1 B_r\)</span>.</li>
+</ul>
+<p class="rubric">2. <em>Python</em> profiles</p>
+<blockquote>
+<div><p>Any <em>python</em> function can be a profile. You must have basic <em>python</em> knowledge to build these functions.</p>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mf">1.</span><span class="p">:</span> <span class="k">return</span> <span class="mf">0.</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>    <span class="c1"># two variables for 2D simulation</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="n">twoPI</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span>  <span class="n">twoPI</span> <span class="o">*</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.2</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Once the function is created, you have to include it in the block you want,
+for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Species</span><span class="p">(</span> <span class="o">...</span> <span class="p">,</span> <span class="n">charge</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="o">...</span> <span class="p">)</span>
+
+<span class="n">Species</span><span class="p">(</span> <span class="o">...</span> <span class="p">,</span> <span class="n">mean_velocity</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">...</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p class="rubric">3. Pre-defined <em>spatial</em> profiles</p>
+<blockquote>
+<div><dl class="function">
+<dt id="constant">
+<code class="descname">constant</code><span class="sig-paren">(</span><em>value</em>, <em>xvacuum=0.</em>, <em>yvacuum=0.</em><span class="sig-paren">)</span><a class="headerlink" href="#constant" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>value</strong> &#8211; the magnitude</li>
+<li><strong>xvacuum</strong> &#8211; vacuum region before the start of the profile.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trapezoidal">
+<code class="descname">trapezoidal</code><span class="sig-paren">(</span><em>max</em>, <em>xvacuum=0.</em>, <em>xplateau=None</em>, <em>xslope1=0.</em>, <em>xslope2=0.</em>, <em>yvacuum=0.</em>, <em>yplateau=None</em>, <em>yslope1=0.</em>, <em>yslope2=0.</em><span class="sig-paren">)</span><a class="headerlink" href="#trapezoidal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>max</strong> &#8211; maximum value</li>
+<li><strong>xvacuum</strong> &#8211; empty length before the ramp up</li>
+<li><strong>xplateau</strong> &#8211; length of the plateau (default is <a class="reference internal" href="#sim_length" title="sim_length"><code class="xref py py-data docutils literal"><span class="pre">sim_length</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">xvacuum</span></code>)</li>
+<li><strong>xslope1</strong> &#8211; length of the ramp up</li>
+<li><strong>xslope2</strong> &#8211; length of the ramp down</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gaussian">
+<code class="descname">gaussian</code><span class="sig-paren">(</span><em>max</em>, <em>xvacuum=0.</em>, <em>xlength=None</em>, <em>xfwhm=None</em>, <em>xcenter=None</em>, <em>xorder=2</em>, <em>yvacuum=0.</em>, <em>ylength=None</em>, <em>yfwhm=None</em>, <em>ycenter=None</em>, <em>yorder=2</em><span class="sig-paren">)</span><a class="headerlink" href="#gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max</strong> &#8211; maximum value</li>
+<li><strong>xvacuum</strong> &#8211; empty length before starting the profile</li>
+<li><strong>xlength</strong> &#8211; length of the profile (default is <a class="reference internal" href="#sim_length" title="sim_length"><code class="xref py py-data docutils literal"><span class="pre">sim_length</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">xvacuum</span></code>)</li>
+<li><strong>xfwhm</strong> &#8211; gaussian FWHM (default is <code class="docutils literal"><span class="pre">xlength/3.</span></code>)</li>
+<li><strong>xcenter</strong> &#8211; gaussian center position (default is in the middle of <code class="docutils literal"><span class="pre">xlength</span></code>)</li>
+<li><strong>xorder</strong> &#8211; order of the gaussian.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body"><p class="first last">If <code class="docutils literal"><span class="pre">yorder</span></code> equals 0, then the profile is constant over <span class="math">\(y\)</span>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="polygonal">
+<code class="descname">polygonal</code><span class="sig-paren">(</span><em>xpoints=[]</em>, <em>xvalues=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#polygonal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xpoints</strong> &#8211; list of the positions of the points</li>
+<li><strong>xvalues</strong> &#8211; list of the values of the profile at each point</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cosine">
+<code class="descname">cosine</code><span class="sig-paren">(</span><em>base</em>, <em>amplitude=1.</em>, <em>xvacuum=0.</em>, <em>xlength=None</em>, <em>xphi=0.</em>, <em>xnumber=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cosine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; offset of the profile value</li>
+<li><strong>amplitude</strong> &#8211; amplitude of the cosine</li>
+<li><strong>xvacuum</strong> &#8211; empty length before starting the profile</li>
+<li><strong>xlength</strong> &#8211; length of the profile (default is <a class="reference internal" href="#sim_length" title="sim_length"><code class="xref py py-data docutils literal"><span class="pre">sim_length</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">xvacuum</span></code>)</li>
+<li><strong>xphi</strong> &#8211; phase offset</li>
+<li><strong>xnumber</strong> &#8211; number of periods within <code class="docutils literal"><span class="pre">xlength</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="polynomial">
+<code class="descname">polynomial</code><span class="sig-paren">(</span><em>x0=0.</em>, <em>y0=0.</em>, <em>z0=0.</em>, <em>order0=[]</em>, <em>order1=[]</em>, <em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x0</strong><strong>,</strong><strong>y0</strong> &#8211; The reference position(s)</li>
+<li><strong>order0</strong> &#8211; Coefficient for the 0th order</li>
+<li><strong>order1</strong> &#8211; Coefficient for the 1st order (2 coefficients in 2D)</li>
+<li><strong>order2</strong> &#8211; Coefficient for the 2nd order (3 coefficients in 2D)</li>
+<li><strong>etc</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates a polynomial of the form</p>
+<div class="math">
+\[\begin{split}\begin{eqnarray}
+&amp;\sum_i a_i(x-x_0)^i &amp; \quad\mathrm{in\, 1D}\\
+&amp;\sum_i \sum_j a_{ij}(x-x0)^{i-j}(y-y0)^j &amp; \quad\mathrm{in\, 2D}\\
+&amp;\sum_i \sum_j \sum_k a_{ijk}(x-x0)^{i-j-k}(y-y0)^j(z-z0)^k &amp; \quad\mathrm{in\, 3D}
+\end{eqnarray}\end{split}\]</div>
+<p>Each <code class="docutils literal"><span class="pre">orderi</span></code> is a coefficient (or list of coefficents) associated to the order <code class="docutils literal"><span class="pre">i</span></code>.
+In 1D, there is only one coefficient per order. In 2D, each <code class="docutils literal"><span class="pre">orderi</span></code> is a list
+of <code class="docutils literal"><span class="pre">i+1</span></code> coefficients. For instance, the second order has three coefficients
+associated to <span class="math">\(x^2\)</span>, <span class="math">\(xy\)</span> and <span class="math">\(y^2\)</span>, respectively.
+In 3D, each <code class="docutils literal"><span class="pre">orderi</span></code> is a list of <code class="docutils literal"><span class="pre">(i+1)*(i+2)/2</span></code> coefficients. For instance,
+the second order has 6 coefficients associated to <span class="math">\(x^2\)</span>, <span class="math">\(xy\)</span>, <span class="math">\(xz\)</span>,
+<span class="math">\(y^2\)</span>, <span class="math">\(yz\)</span> and <span class="math">\(z^2\)</span>, respectively.</p>
+</dd></dl>
+
+<p><strong>Examples</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Species</span><span class="p">(</span> <span class="o">...</span> <span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="n">xfwhm</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">xcenter</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span> <span class="o">...</span> <span class="p">)</span>
+
+<span class="n">ExtField</span><span class="p">(</span> <span class="o">...</span><span class="p">,</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">constant</span><span class="p">(</span><span class="mf">2.2</span><span class="p">),</span> <span class="o">...</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p class="rubric">4. Pre-defined <em>temporal</em> profiles</p>
+<blockquote>
+<div><dl class="function">
+<dt id="tconstant">
+<code class="descname">tconstant</code><span class="sig-paren">(</span><em>start=0.</em><span class="sig-paren">)</span><a class="headerlink" href="#tconstant" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>start</strong> &#8211; starting time</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ttrapezoidal">
+<code class="descname">ttrapezoidal</code><span class="sig-paren">(</span><em>start=0.</em>, <em>plateau=None</em>, <em>slope1=0.</em>, <em>slope2=0.</em><span class="sig-paren">)</span><a class="headerlink" href="#ttrapezoidal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> &#8211; starting time</li>
+<li><strong>plateau</strong> &#8211; duration of the plateau (default is <a class="reference internal" href="#sim_time" title="sim_time"><code class="xref py py-data docutils literal"><span class="pre">sim_time</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">start</span></code>)</li>
+<li><strong>slope1</strong> &#8211; duration of the ramp up</li>
+<li><strong>slope2</strong> &#8211; duration of the ramp down</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tgaussian">
+<code class="descname">tgaussian</code><span class="sig-paren">(</span><em>start=0.</em>, <em>duration=None</em>, <em>fwhm=None</em>, <em>center=None</em>, <em>order=2</em><span class="sig-paren">)</span><a class="headerlink" href="#tgaussian" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> &#8211; starting time</li>
+<li><strong>duration</strong> &#8211; duration of the profile (default is <a class="reference internal" href="#sim_time" title="sim_time"><code class="xref py py-data docutils literal"><span class="pre">sim_time</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">start</span></code>)</li>
+<li><strong>fwhm</strong> &#8211; gaussian FWHM (default is <code class="docutils literal"><span class="pre">duration/3.</span></code>)</li>
+<li><strong>center</strong> &#8211; gaussian center time (default is in the middle of <code class="docutils literal"><span class="pre">duration</span></code>)</li>
+<li><strong>order</strong> &#8211; order of the gaussian</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tpolygonal">
+<code class="descname">tpolygonal</code><span class="sig-paren">(</span><em>points=[]</em>, <em>values=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tpolygonal" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; list of times</li>
+<li><strong>values</strong> &#8211; list of the values at each time</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tcosine">
+<code class="descname">tcosine</code><span class="sig-paren">(</span><em>base=0.</em>, <em>amplitude=1.</em>, <em>start=0.</em>, <em>duration=None</em>, <em>phi=0.</em>, <em>freq=1.</em><span class="sig-paren">)</span><a class="headerlink" href="#tcosine" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; offset of the profile value</li>
+<li><strong>amplitude</strong> &#8211; amplitude of the cosine</li>
+<li><strong>start</strong> &#8211; starting time</li>
+<li><strong>duration</strong> &#8211; duration of the profile (default is <a class="reference internal" href="#sim_time" title="sim_time"><code class="xref py py-data docutils literal"><span class="pre">sim_time</span></code></a> <span class="math">\(-\)</span> <code class="docutils literal"><span class="pre">start</span></code>)</li>
+<li><strong>phi</strong> &#8211; phase offset</li>
+<li><strong>freq</strong> &#8211; frequency</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tpolynomial">
+<code class="descname">tpolynomial</code><span class="sig-paren">(</span><em>t0=0.</em>, <em>order0=[]</em>, <em>order1=[]</em>, <em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#tpolynomial" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>t0</strong> &#8211; The reference position</li>
+<li><strong>order0</strong> &#8211; Coefficient for the 0th order</li>
+<li><strong>order1</strong> &#8211; Coefficient for the 1st order</li>
+<li><strong>order2</strong> &#8211; Coefficient for the 2nd order</li>
+<li><strong>etc</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Creates a polynomial of the form <span class="math">\(\sum_i a_i(t-t_0)^i\)</span>.</p>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Antenna</span><span class="p">(</span> <span class="o">...</span> <span class="p">,</span> <span class="n">time_profile</span> <span class="o">=</span> <span class="n">tcosine</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="mf">0.01</span><span class="p">),</span> <span class="o">...</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p class="rubric">Illustrations of the pre-defined spatial and temporal profiles</p>
+<img alt="_images/pythonprofiles.png" src="_images/pythonprofiles.png" />
+<img alt="_images/pythonprofiles_t.png" src="_images/pythonprofiles_t.png" />
+</div>
+<hr class="docutils" />
+<div class="section" id="walls">
+<h2>Walls<a class="headerlink" href="#walls" title="Permalink to this headline">¶</a></h2>
+<p>A wall can be introduced using a <code class="docutils literal"><span class="pre">PartWall</span></code> block in order to
+reflect, stop, thermalize or kill particles which reach it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PartWall</span><span class="p">(</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;refl&quot;</span><span class="p">,</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mf">20.</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="kind">
+<code class="descname">kind</code><a class="headerlink" href="#kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>The kind of wall: <code class="docutils literal"><span class="pre">&quot;refl&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;stop&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;thermalize&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;supp&quot;</span></code>;
+corresponding to a <em>reflective</em>, <em>stopping</em>, <em>thermalizing</em> or <em>suppressing</em> wall,
+respectively.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="x">
+<code class="descname">x</code><a class="headerlink" href="#x" title="Permalink to this definition">¶</a></dt>
+<dt id="y">
+<code class="descname">y</code><a class="headerlink" href="#y" title="Permalink to this definition">¶</a></dt>
+<dt id="z">
+<code class="descname">z</code><a class="headerlink" href="#z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position of the wall in the desired direction. Use only one of <code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">y</span></code> or <code class="docutils literal"><span class="pre">z</span></code>.</p>
+</dd></dl>
+
+<hr class="docutils" />
+</div>
+<div class="section" id="collisions">
+<span id="id4"></span><h2>Collisions<a class="headerlink" href="#collisions" title="Permalink to this headline">¶</a></h2>
+<p>To have binary collisions in <strong class="program">Smilei</strong>, add one or several <code class="docutils literal"><span class="pre">Collisions</span></code> blocks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Collisions</span><span class="p">(</span>
+    <span class="n">species1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electrons1&quot;</span><span class="p">,</span>  <span class="s2">&quot;electrons2&quot;</span><span class="p">],</span>
+    <span class="n">species2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ions1&quot;</span><span class="p">],</span>
+    <span class="n">coulomb_log</span> <span class="o">=</span> <span class="mf">5.</span><span class="p">,</span>
+    <span class="n">debug_every</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">ionizing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="species1">
+<code class="descname">species1</code><a class="headerlink" href="#species1" title="Permalink to this definition">¶</a></dt>
+<dt id="species2">
+<code class="descname">species2</code><a class="headerlink" href="#species2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists of species names (see <a class="reference internal" href="#species_type" title="species_type"><code class="xref py py-data docutils literal"><span class="pre">species_type</span></code></a>).</p>
+<p>The collisions will occur between all species under the group <code class="docutils literal"><span class="pre">species1</span></code>
+and all species under the group <code class="docutils literal"><span class="pre">species2</span></code>. For example, to collide all
+electrons with ions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">species1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electrons1&quot;</span><span class="p">,</span> <span class="s2">&quot;electrons2&quot;</span><span class="p">],</span> <span class="n">species2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ions&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This does not make <code class="docutils literal"><span class="pre">electrons1</span></code> collide with <code class="docutils literal"><span class="pre">electrons2</span></code>.</p>
+</div>
+<p>The two groups of species have to be <em>completely different</em> OR <em>exactly equal</em>.
+In other words, if <code class="docutils literal"><span class="pre">species1</span></code> is not equal to <code class="docutils literal"><span class="pre">species2</span></code>,
+then they cannot have any common species.
+If the two groups are exactly equal, we call this situation <strong>intra-collisions</strong>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="coulomb_log">
+<code class="descname">coulomb_log</code><a class="headerlink" href="#coulomb_log" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The Coulomb logarithm.</p>
+<ul class="simple">
+<li>If <span class="math">\(= 0\)</span>, the Coulomb logarithm is automatically computed for each collision.</li>
+<li>If <span class="math">\(&gt; 0\)</span>, the Coulomb logarithm is equal to this value.</li>
+</ul>
+</dd></dl>
+
+<dl class="data">
+<dt id="debug_every">
+<code class="descname">debug_every</code><a class="headerlink" href="#debug_every" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">0</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line">Number of timesteps between each output of information about collisions.</div>
+<div class="line">If 0, there will be no outputs.</div>
+</div>
+</dd></dl>
+
+<span class="target" id="collisionalionization"></span><dl class="data">
+<dt id="ionizing">
+<code class="descname">ionizing</code><a class="headerlink" href="#ionizing" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">False</td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal"><span class="pre">True</span></code>, <a class="reference internal" href="collisions.html#collionization"><span class="std std-ref">collisional ionization</span></a> will occur. One of the
+species groups must be all electrons (<a class="reference internal" href="#mass" title="mass"><code class="xref py py-data docutils literal"><span class="pre">mass</span></code></a> = 1), and the other one all ions of the
+same <a class="reference internal" href="#atomic_number" title="atomic_number"><code class="xref py py-data docutils literal"><span class="pre">atomic_number</span></code></a>.</p>
+</dd></dl>
+
+<p>For more details about the collision scheme in <strong class="program">Smilei</strong>, see <a class="reference internal" href="collisions.html"><span class="doc">Binary collisions</span></a></p>
+<hr class="docutils" />
+</div>
+<div class="section" id="scalar-diagnostics">
+<span id="diagscalar"></span><h2><em>Scalar</em> diagnostics<a class="headerlink" href="#scalar-diagnostics" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">Smilei</strong> can collect various scalar data, such as total particle energy, total field energy, etc.
+This is done by including the block <code class="docutils literal"><span class="pre">DiagScalar</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagScalar</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">,</span>
+    <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Utot&quot;</span><span class="p">,</span> <span class="s2">&quot;Ukin&quot;</span><span class="p">,</span> <span class="s2">&quot;Uelm&quot;</span><span class="p">],</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt>
+<code class="descname">every</code></dt>
+<dd><p>Number of timesteps between each output <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="vars">
+<code class="descname">vars</code><a class="headerlink" href="#vars" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[]</span></code></td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line">List of scalars that will be actually output. Note that most scalars are computed anyways.</div>
+<div class="line">Omit this argument to include all scalars.</div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="precision">
+<code class="descname">precision</code><a class="headerlink" href="#precision" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">10</td>
+</tr>
+</tbody>
+</table>
+<p>Number of digits of the outputs.</p>
+</dd></dl>
+
+<p>The full list of scalars that are saved by this diagnostic:</p>
+<table border="1" class="nowrap docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td colspan="2"><strong>Global energies</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Utot</div>
+<div class="line">Ukin</div>
+<div class="line">Uelm</div>
+<div class="line">Uexp</div>
+<div class="line">Ubal</div>
+<div class="line">Ubal_norm</div>
+<div class="line">Uelm_Ex</div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">Total energy</div>
+<div class="line">Total kinetic energy (in the particles)</div>
+<div class="line">Total EM energy (in the fields)</div>
+<div class="line">Expected value (Initial energy <span class="math">\(-\)</span> lost <span class="math">\(+\)</span> gained)</div>
+<div class="line">Energy balance (Utot <span class="math">\(-\)</span> Uexp)</div>
+<div class="line">Normalized energy balance (Ubal <span class="math">\(/\)</span> Utot)</div>
+<div class="line">Energy in Ex field (<span class="math">\(\int E_x^2 dV /2\)</span>)</div>
+<div class="line-block">
+<div class="line">... and idem for fields Ey, Ez, Bx_m, By_m and Bz_m</div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="2"><strong>Energies lost/gained at boundaries</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Ukin_bnd</div>
+<div class="line">Uelm_bnd</div>
+<div class="line">Ukin_out_mvw</div>
+<div class="line">Ukin_inj_mvw</div>
+<div class="line">Uelm_out_mvw</div>
+<div class="line">Uelm_inj_mvw</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">Kinetic energy exchanged at the boundaries during the timestep</div>
+<div class="line">EM energy exchanged at boundaries during the timestep</div>
+<div class="line">Kinetic energy lost during the timestep due to the moving window</div>
+<div class="line">Kinetic energy injected during the timestep due to the moving window</div>
+<div class="line">EM energy lost during the timestep due to the moving window</div>
+<div class="line">EM energy injected during the timestep due to the moving window</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="2"><strong>Species information</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Dens_abc</div>
+<div class="line">Zavg_abc</div>
+<div class="line">Ukin_abc</div>
+<div class="line">Ntot_abc</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">Average density of species &#8220;abc&#8221;</div>
+<div class="line-block">
+<div class="line">... its average charge</div>
+<div class="line">... its total kinetic energy</div>
+<div class="line">... and number of particles</div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="2"><strong>Fields information</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">ExMin</div>
+<div class="line">ExMinCell</div>
+<div class="line">ExMax</div>
+<div class="line">ExMaxCell</div>
+<div class="line"><br /></div>
+<div class="line">PoyXmin</div>
+<div class="line">PoyXminInst</div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">Minimum of <span class="math">\(E_x\)</span></div>
+<div class="line-block">
+<div class="line">... and its location (cell index)</div>
+</div>
+<div class="line">Maximum of <span class="math">\(E_x\)</span></div>
+<div class="line-block">
+<div class="line">... and its location (cell index)</div>
+</div>
+<div class="line">... same for fields Ey Ez Bx_m By_m Bz_m Jx Jy Jz Rho</div>
+<div class="line">Accumulated Poynting flux through xmin boundary</div>
+<div class="line">Current Poynting flux through xmin boundary</div>
+<div class="line-block">
+<div class="line">... same for other boundaries</div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Checkout the <a class="reference internal" href="post-processing.html"><span class="doc">post-processing</span></a> documentation as well.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="fields-diagnostics">
+<span id="diagfields"></span><h2><em>Fields</em> diagnostics<a class="headerlink" href="#fields-diagnostics" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">Smilei</strong> can collect various field data (electromagnetic fields, currents and density)
+taken at the location of the PIC grid, both as instantaneous values and averaged values.
+This is done by including a block <code class="docutils literal"><span class="pre">DiagFields</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagFields</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ex&quot;</span><span class="p">,</span> <span class="s2">&quot;Ey&quot;</span><span class="p">,</span> <span class="s2">&quot;Ez&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt>
+<code class="descname">every</code></dt>
+<dd><p>Number of timesteps between each output <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="flush_every">
+<code class="descname">flush_every</code><a class="headerlink" href="#flush_every" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+<p>When <cite>flush_every</cite> coincides with <cite>every</cite>, the output
+file is actually written (&#8220;flushed&#8221; from the buffer). Flushing
+too often can <em>dramatically</em> slow down the simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="time_average">
+<code class="descname">time_average</code><a class="headerlink" href="#time_average" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">1</span></code> <em>(no averaging)</em></td>
+</tr>
+</tbody>
+</table>
+<p>The number of timesteps for time-averaging.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="fields">
+<code class="descname">fields</code><a class="headerlink" href="#fields" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[]</span></code> <em>(all fields are written)</em></td>
+</tr>
+</tbody>
+</table>
+<p>List of the field names that are saved. By default, they all are.</p>
+</dd></dl>
+
+<p>The full list of fields that are saved by this diagnostic:</p>
+<table border="1" class="nowrap docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><div class="first last line-block">
+<div class="line">Bx</div>
+<div class="line">By</div>
+<div class="line">Bz</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line">Components of the magnetic field</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Bx_m</div>
+<div class="line">By_m</div>
+<div class="line">Bz_m</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line">Components of the magnetic field (time-centered)</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="first last line-block">
+<div class="line">Ex</div>
+<div class="line">Ey</div>
+<div class="line">Ez</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line">Components of the electric field</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Jx</div>
+<div class="line">Jy</div>
+<div class="line">Jz</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line">Components of the total current</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="first last line-block">
+<div class="line">Jx_abc</div>
+<div class="line">Jy_abc</div>
+<div class="line">Jz_abc</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line">Components of the current due to species &#8220;abc&#8221;</div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="first last line-block">
+<div class="line">Rho</div>
+<div class="line">Rho_abc</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">Total density</div>
+<div class="line">Density of species &#8220;abc&#8221;</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+</div>
+<div class="section" id="probe-diagnostics">
+<span id="diagprobe"></span><h2><em>Probe</em> diagnostics<a class="headerlink" href="#probe-diagnostics" title="Permalink to this headline">¶</a></h2>
+<p>The fields from the previous section are taken at the PIC grid locations,
+but it is also possible to obtain the fields at arbitrary locations.
+These are called <em>probes</em>.</p>
+<p>A probe interpolates the fields at either one point (0-D),
+several points arranged in a line (1-D) or several points arranged in a mesh (2-D).</p>
+<p>To add one probe diagnostic, include the block <code class="docutils literal"><span class="pre">DiagProbe</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagProbe</span><span class="p">(</span>
+    <span class="n">every</span>      <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">pos</span>        <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+    <span class="n">pos_first</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">10.</span><span class="p">],</span>
+    <span class="n">pos_second</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+    <span class="n">number</span>     <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ex&quot;</span><span class="p">,</span> <span class="s2">&quot;Ey&quot;</span><span class="p">,</span> <span class="s2">&quot;Ez&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt>
+<code class="descname">every</code></dt>
+<dd><p>Number of timesteps between each output <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">flush_every</code></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+<p>When <cite>flush_every</cite> coincides with <cite>every</cite>, the output
+file is actually written (&#8220;flushed&#8221; from the buffer). Flushing
+too often can <em>dramatically</em> slow down the simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pos">
+<code class="descname">pos</code><a class="headerlink" href="#pos" title="Permalink to this definition">¶</a></dt>
+<dt id="pos_first">
+<code class="descname">pos_first</code><a class="headerlink" href="#pos_first" title="Permalink to this definition">¶</a></dt>
+<dt id="pos_second">
+<code class="descname">pos_second</code><a class="headerlink" href="#pos_second" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of floats, of length equal to the simulation dimensionality.</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line">The coordinates of several points.</div>
+<div class="line">One point provided = a 0-D probe.</div>
+<div class="line">Two points provided = a 1-D probe.</div>
+<div class="line">Three points provided = a 2-D probe.</div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="number">
+<code class="descname">number</code><a class="headerlink" href="#number" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of integers, one for each dimension of the probe.</td>
+</tr>
+</tbody>
+</table>
+<p>The number of points in each probe axis. Must not be defined for a 0-D probe.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">fields</code></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">[]</span></code> (all fields)</td>
+</tr>
+</tbody>
+</table>
+<p>A list of fields among <code class="docutils literal"><span class="pre">&quot;Ex&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ey&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ez&quot;</span></code>,
+<code class="docutils literal"><span class="pre">&quot;Bx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;By&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Bz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jy&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jz&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;Rho&quot;</span></code>. Only these
+fields will be saved.
+Note that it does NOT speed up calculation much, but it saves disk space.</p>
+</dd></dl>
+
+<p><strong>Examples of probe diagnostics</strong></p>
+<ul>
+<li><p class="first">0-D probe in 1-D simulation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagProbe</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">pos</span>   <span class="o">=</span> <span class="p">[</span><span class="mf">1.2</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">1-D probe in 1-D simulation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagProbe</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">pos</span>       <span class="o">=</span> <span class="p">[</span><span class="mf">1.2</span><span class="p">],</span>
+    <span class="n">pos_first</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.6</span><span class="p">],</span>
+    <span class="n">number</span>    <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">1-D probe in 2-D simulation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagProbe</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">pos</span>       <span class="o">=</span> <span class="p">[</span><span class="mf">1.2</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">],</span>
+    <span class="n">pos_first</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.6</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">],</span>
+    <span class="n">number</span>    <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">2-D probe in 2-D simulation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagProbe</span><span class="p">(</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">pos</span>        <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span> <span class="p">,</span>   <span class="mf">0.</span><span class="p">],</span>
+    <span class="n">pos_first</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">10.</span> <span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
+    <span class="n">pos_second</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span>    <span class="mf">10.</span><span class="p">],</span>
+    <span class="n">number</span>     <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span>   <span class="mi">100</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</div>
+<div class="section" id="particle-diagnostics">
+<span id="diagparticles"></span><h2><em>Particle</em> diagnostics<a class="headerlink" href="#particle-diagnostics" title="Permalink to this headline">¶</a></h2>
+<p>A <em>particle diagnostic</em> collects data from the macro-particles and processes them during runtime.
+It does not provide information on individual particles: instead, it produces
+<strong>averaged quantities</strong> like the particle density, currents, etc.</p>
+<p>The data is discretized inside a &#8220;grid&#8221; chosen by the user. This grid may be of any dimension.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li>1-dimensional grid along the position <span class="math">\(x\)</span> (gives density variation along <span class="math">\(x\)</span>)</li>
+<li>2-dimensional grid along positions <span class="math">\(x\)</span> and <span class="math">\(y\)</span> (gives density map)</li>
+<li>1-dimensional grid along the velocity <span class="math">\(v_x\)</span> (gives the velocity distribution)</li>
+<li>2-dimensional grid along position <span class="math">\(x\)</span> and momentum <span class="math">\(p_x\)</span> (gives the phase-space)</li>
+<li>1-dimensional grid along the kinetic energy <span class="math">\(E_\mathrm{kin}\)</span> (gives the energy distribution)</li>
+<li>3-dimensional grid along <span class="math">\(x\)</span>, <span class="math">\(y\)</span> and <span class="math">\(E_\mathrm{kin}\)</span> (gives the density map for several energies)</li>
+<li>1-dimensional grid along the charge <span class="math">\(Z^\star\)</span> (gives the charge distribution)</li>
+</ul>
+<p>Each dimension of the grid is called &#8220;axis&#8221;.</p>
+<p>You can add a particle diagnostic by including a block <code class="docutils literal"><span class="pre">DiagParticles()</span></code> in the namelist,
+for instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electrons1&quot;</span><span class="p">,</span> <span class="s2">&quot;electrons2&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="p">[</span><span class="s2">&quot;ekin&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;logscale&quot;</span><span class="p">,</span> <span class="s2">&quot;edge_inclusive&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="output">
+<code class="descname">output</code><a class="headerlink" href="#output" title="Permalink to this definition">¶</a></dt>
+<dd><p>determines the data that is summed in each cell of the grid:</p>
+<ul class="simple">
+<li>with <code class="docutils literal"><span class="pre">&quot;density&quot;</span></code>, the weights are summed.</li>
+<li>with <code class="docutils literal"><span class="pre">&quot;charge_density&quot;</span></code>, the weights <span class="math">\(\times\)</span> charge are summed.</li>
+<li>with <code class="docutils literal"><span class="pre">&quot;jx_density&quot;</span></code>, the weights <span class="math">\(\times\)</span> charge <span class="math">\(\times\; v_x\)</span> are summed (same with <span class="math">\(y\)</span> and <span class="math">\(z\)</span>).</li>
+<li>with <code class="docutils literal"><span class="pre">&quot;p_density&quot;</span></code>, the weights <span class="math">\(\times\; p\)</span> are summed (same with <span class="math">\(p_x\)</span>, <span class="math">\(p_y\)</span> and <span class="math">\(p_z\)</span>).</li>
+<li>with <code class="docutils literal"><span class="pre">&quot;ekin_density&quot;</span></code>, the weights <span class="math">\(\times mc^2\; (\gamma-1)\)</span> are summed.</li>
+<li>with <code class="docutils literal"><span class="pre">&quot;pressure_xx&quot;</span></code>, the weights <span class="math">\(\times\; v_x p_x\)</span> are summed (same with yy, zz, xy, yz and xz).</li>
+</ul>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">every</code></dt>
+<dd><p>The number of time-steps between each output, <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">flush_every</code></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+<p>When <cite>flush_every</cite> coincides with <cite>every</cite>, the output
+file is actually written (&#8220;flushed&#8221; from the buffer). Flushing
+too often can <em>dramatically</em> slow down the simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">time_average</code></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>The number of time-steps during which the data is averaged before output.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">species</code></dt>
+<dd><p>A list of the names of one or several species (see <a class="reference internal" href="#species_type" title="species_type"><code class="xref py py-data docutils literal"><span class="pre">species_type</span></code></a>).</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="axes">
+<code class="descname">axes</code><a class="headerlink" href="#axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of &#8220;axes&#8221; that define the grid.</p>
+<p>Syntax of one axis: <code class="docutils literal"><span class="pre">[type,</span> <span class="pre">min,</span> <span class="pre">max,</span> <span class="pre">nsteps,</span> <span class="pre">&quot;logscale&quot;,</span> <span class="pre">&quot;edge_inclusive&quot;]</span></code></p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">type</span></code> is one of <code class="docutils literal"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;z&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;px&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;py&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;pz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;p&quot;</span></code>,
+<code class="docutils literal"><span class="pre">&quot;gamma&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ekin&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vy&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;v&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;charge&quot;</span></code>.
+There is one additional type, specific for simulations that include a
+<a class="reference internal" href="#movingwindow"><span class="std std-ref">moving window</span></a>: the x-coordinate corrected by the window
+current movement <code class="docutils literal"><span class="pre">moving_x</span></code>.</li>
+<li>The axis is discretized for <code class="docutils literal"><span class="pre">type</span></code> from <code class="docutils literal"><span class="pre">min</span></code> to <code class="docutils literal"><span class="pre">max</span></code> in <code class="docutils literal"><span class="pre">nsteps</span></code> bins.</li>
+<li>The optional keyword <code class="docutils literal"><span class="pre">logscale</span></code> sets the axis scale to logarithmic instead of linear.</li>
+<li>The optional keyword <code class="docutils literal"><span class="pre">edge_inclusive</span></code> includes the particles outside the range
+[<code class="docutils literal"><span class="pre">min</span></code>, <code class="docutils literal"><span class="pre">max</span></code>] into the extrema bins.</li>
+</ul>
+<p>There may be as many axes as wanted in one <code class="docutils literal"><span class="pre">DiagParticles(</span> <span class="pre">...</span> <span class="pre">)</span></code> block.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As an experimental capability, we created the &#8220;composite&#8221; axes <code class="docutils literal"><span class="pre">type</span></code>.
+You may write the axis type as <code class="docutils literal"><span class="pre">&quot;ax+by+cz&quot;</span></code>, where <code class="docutils literal"><span class="pre">a</span></code>, <code class="docutils literal"><span class="pre">b</span></code> and <code class="docutils literal"><span class="pre">c</span></code> are numbers.
+This syntax does NOT accept characters other than numbers and the characters <code class="docutils literal"><span class="pre">xyz+-</span></code>.
+For instance, it does not accept divisions <code class="docutils literal"><span class="pre">/</span></code> or whitespace.
+The resulting axis is along the vector of coordinates <span class="math">\((a,b,c)\)</span>.
+For instance, in 2D, <code class="docutils literal"><span class="pre">&quot;x+2y&quot;</span></code> makes an axis oriented along the vector <span class="math">\((1,2)\)</span>.</p>
+</div>
+<p><strong>Examples of particle diagnostics</strong></p>
+<ul>
+<li><p class="first">Variation of the density of species <code class="docutils literal"><span class="pre">electron1</span></code>
+from <span class="math">\(x=0\)</span> to 1, every 5 time-steps, without time-averaging</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Density map from <span class="math">\(x=0\)</span> to 1, <span class="math">\(y=0\)</span> to 1</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">],</span>
+             <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Velocity distribution from <span class="math">\(v_x = -0.1\)</span> to <span class="math">\(0.1\)</span></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;vx&quot;</span><span class="p">,</span>   <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>    <span class="mf">0.1</span><span class="p">,</span>    <span class="mi">100</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Phase space from <span class="math">\(x=0\)</span> to 1 and from <span class="math">\(px=-1\)</span> to 1</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">],</span>
+             <span class="p">[</span><span class="s2">&quot;px&quot;</span><span class="p">,</span>   <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>   <span class="mf">1.</span><span class="p">,</span>    <span class="mi">100</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Energy distribution from 0.01 to 1 MeV in logarithmic scale.
+Note that the input units are <span class="math">\(m_ec^2 \sim 0.5\)</span> MeV</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;ekin&quot;</span><span class="p">,</span>    <span class="mf">0.02</span><span class="p">,</span>    <span class="mf">2.</span><span class="p">,</span>   <span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;logscale&quot;</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><span class="math">\(x\)</span>-<span class="math">\(y\)</span> density maps for three bands of energy: <span class="math">\([0,1]\)</span>, <span class="math">\([1,2]\)</span>, <span class="math">\([2,\infty]\)</span>.
+Note the use of <code class="docutils literal"><span class="pre">edge_inclusive</span></code> to reach energies up to <span class="math">\(\infty\)</span></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">],</span>
+             <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>    <span class="mf">0.</span><span class="p">,</span>    <span class="mf">1.</span><span class="p">,</span>    <span class="mi">30</span><span class="p">],</span>
+             <span class="p">[</span><span class="s2">&quot;ekin&quot;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span>    <span class="mf">6.</span><span class="p">,</span>    <span class="mi">3</span><span class="p">,</span>  <span class="s2">&quot;edge_inclusive&quot;</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Charge distribution from <span class="math">\(Z^\star =0\)</span> to 10</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagParticles</span><span class="p">(</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">time_average</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;charge&quot;</span><span class="p">,</span>    <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>   <span class="mf">10.5</span><span class="p">,</span>   <span class="mi">11</span><span class="p">]</span> <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</div>
+<div class="section" id="screen-diagnostics">
+<span id="diagscreen"></span><h2><em>Screen</em> diagnostics<a class="headerlink" href="#screen-diagnostics" title="Permalink to this headline">¶</a></h2>
+<p>A <em>screen</em> collects data from the macro-particles when they cross a surface.
+It processes this data similarly to the <a class="reference internal" href="#diagparticles"><span class="std std-ref">particle diagnostics</span></a>
+as it makes a histogram of the macro-particle properties. The only difference is
+that the histogram is made only by the particles that cross the surface.</p>
+<p>You can add a screen by including a block <code class="docutils literal"><span class="pre">DiagScreen()</span></code> in the namelist,
+for instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DiagScreen</span><span class="p">(</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;plane&quot;</span><span class="p">,</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">],</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="s2">&quot;canceling&quot;</span><span class="p">,</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;electron&quot;</span><span class="p">],</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="o">*</span><span class="n">l0</span><span class="p">,</span> <span class="mf">10.</span><span class="o">*</span><span class="n">l0</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mi">30</span><span class="p">]],</span>
+    <span class="n">every</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="shape">
+<code class="descname">shape</code><a class="headerlink" href="#shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The shape of the screen surface: <code class="docutils literal"><span class="pre">&quot;plane&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;sphere&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="point">
+<code class="descname">point</code><a class="headerlink" href="#point" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of floats <code class="docutils literal"><span class="pre">[X]</span></code> in 1D,  <code class="docutils literal"><span class="pre">[X,Y]</span></code> in 2D,  <code class="docutils literal"><span class="pre">[X,Y,Z]</span></code> in 3D</td>
+</tr>
+</tbody>
+</table>
+<p>The coordinates of a point that defines the screen surface:
+a point of the <code class="docutils literal"><span class="pre">&quot;plane&quot;</span></code> or the center of the <code class="docutils literal"><span class="pre">&quot;sphere&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="vector">
+<code class="descname">vector</code><a class="headerlink" href="#vector" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">A list of floats <code class="docutils literal"><span class="pre">[X]</span></code> in 1D,  <code class="docutils literal"><span class="pre">[X,Y]</span></code> in 2D,  <code class="docutils literal"><span class="pre">[X,Y,Z]</span></code> in 3D</td>
+</tr>
+</tbody>
+</table>
+<p>The coordinates of a vector that defines the screen surface:
+the normal to the <code class="docutils literal"><span class="pre">&quot;plane&quot;</span></code> or a radius of the <code class="docutils literal"><span class="pre">&quot;sphere&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="direction">
+<code class="descname">direction</code><a class="headerlink" href="#direction" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">&quot;both&quot;</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Determines how particles are counted depending on which side of the screen they come from.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">&quot;both&quot;</span></code> to account for both sides.</li>
+<li><code class="docutils literal"><span class="pre">&quot;forward&quot;</span></code> for only the ones in the direction of the <code class="docutils literal"><span class="pre">vector</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">&quot;backward&quot;</span></code> for only the ones in the opposite direction.</li>
+<li><code class="docutils literal"><span class="pre">&quot;canceling&quot;</span></code> to count negatively the ones in the opposite direction.</li>
+</ul>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">output</code></dt>
+<dd><p>Identical to the <code class="docutils literal"><span class="pre">output</span></code> of <a class="reference internal" href="#diagparticles"><span class="std std-ref">particle diagnostics</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">every</code></dt>
+<dd><p>The number of time-steps between each output, <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">flush_every</code></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">1</td>
+</tr>
+</tbody>
+</table>
+<p>Number of timesteps <strong>or</strong> a <a class="reference internal" href="#timeselections"><span class="std std-ref">time selection</span></a>.</p>
+<p>When <cite>flush_every</cite> coincides with <cite>every</cite>, the output
+file is actually written (&#8220;flushed&#8221; from the buffer). Flushing
+too often can <em>dramatically</em> slow down the simulation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">species</code></dt>
+<dd><p>A list of the names of one or several species (see <a class="reference internal" href="#species_type" title="species_type"><code class="xref py py-data docutils literal"><span class="pre">species_type</span></code></a>).</p>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">axes</code></dt>
+<dd><p>A list of &#8220;axes&#8221; that define the grid of the histogram.
+It is identical to that of <a class="reference internal" href="#diagparticles"><span class="std std-ref">particle diagnostics</span></a>, with the
+addition of four types of axes:
+<code class="docutils literal"><span class="pre">&quot;a&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;b&quot;</span></code> are the axes perpendicular to the <code class="docutils literal"><span class="pre">vector</span></code>, when the screen
+shape is a <code class="docutils literal"><span class="pre">&quot;plane&quot;</span></code>.
+<code class="docutils literal"><span class="pre">&quot;theta&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;phi&quot;</span></code> are the angles with respect to the <code class="docutils literal"><span class="pre">vector</span></code>, when the screen
+shape is a <code class="docutils literal"><span class="pre">&quot;sphere&quot;</span></code>.</p>
+</dd></dl>
+
+<hr class="docutils" />
+</div>
+<div class="section" id="time-selections">
+<span id="timeselections"></span><h2>Time selections<a class="headerlink" href="#time-selections" title="Permalink to this headline">¶</a></h2>
+<p>Several components (mainly diagnostics) may require a selection of timesteps to
+be chosen by the user. When one of these timesteps is reached, the diagnostics will
+output data. A time selection is given through the parameter <code class="docutils literal"><span class="pre">every</span></code> and is a list
+of several integers.</p>
+<p>You may chose between five different syntaxes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">every</span> <span class="o">=</span> <span class="p">[</span>               <span class="n">period</span>                    <span class="p">]</span> <span class="c1"># Syntax 1</span>
+<span class="n">every</span> <span class="o">=</span> <span class="p">[</span>       <span class="n">start</span><span class="p">,</span>  <span class="n">period</span>                    <span class="p">]</span> <span class="c1"># Syntax 2</span>
+<span class="n">every</span> <span class="o">=</span> <span class="p">[</span> <span class="n">start</span><span class="p">,</span>  <span class="n">end</span><span class="p">,</span>  <span class="n">period</span>                    <span class="p">]</span> <span class="c1"># Syntax 3</span>
+<span class="n">every</span> <span class="o">=</span> <span class="p">[</span> <span class="n">start</span><span class="p">,</span>  <span class="n">end</span><span class="p">,</span>  <span class="n">period</span><span class="p">,</span>  <span class="n">repeat</span>           <span class="p">]</span> <span class="c1"># Syntax 4</span>
+<span class="n">every</span> <span class="o">=</span> <span class="p">[</span> <span class="n">start</span><span class="p">,</span>  <span class="n">end</span><span class="p">,</span>  <span class="n">period</span><span class="p">,</span>  <span class="n">repeat</span><span class="p">,</span>  <span class="n">spacing</span> <span class="p">]</span> <span class="c1"># Syntax 5</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">start</span></code> is the first timestep of the selection (defaults to 0);</li>
+<li><code class="docutils literal"><span class="pre">end</span></code> is the last timestep of the selection (defaults to ∞);</li>
+<li><code class="docutils literal"><span class="pre">period</span></code> is the separation between outputs (defaults to 1);</li>
+<li><code class="docutils literal"><span class="pre">repeat</span></code> indicates how many outputs to do at each period (defaults to 1);</li>
+<li><code class="docutils literal"><span class="pre">spacing</span></code> is the separation between each repeat (defaults to 1).</li>
+</ul>
+<p>For more clarity, this graph illustrates the five syntaxes for time selections:</p>
+<a class="reference internal image-reference" href="_images/TimeSelections.png"><img alt="_images/TimeSelections.png" class="align-center" src="_images/TimeSelections.png" style="width: 33em;" /></a>
+<div class="admonition-tips admonition">
+<p class="first admonition-title">Tips</p>
+<ul class="last simple">
+<li>The syntax <code class="docutils literal"><span class="pre">every</span> <span class="pre">=</span> <span class="pre">period</span></code> is also accepted.</li>
+<li>Any value set to <code class="docutils literal"><span class="pre">0</span></code> will be replaced by the default value.</li>
+<li>Special case: <code class="docutils literal"><span class="pre">every=0</span></code> means no output.</li>
+</ul>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="checkpoints">
+<span id="id5"></span><h2>Checkpoints<a class="headerlink" href="#checkpoints" title="Permalink to this headline">¶</a></h2>
+<p>The simulation can be <em>dumped</em> at given points (<em>checkpoints</em>) in order to be <em>restarted</em>
+at that point.</p>
+<p>A few things are important to know when you need dumps and restarts.</p>
+<ul class="simple">
+<li>Do not restart the simulation in the same directory as the previous one. Files will be
+overwritten, and errors may occur. Create a new directory for your restarted simulation.</li>
+<li>Manage your memory: each process dumps one file, and the total can be significant.</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DumpRestart</span><span class="p">(</span>
+    <span class="n">restart_dir</span> <span class="o">=</span> <span class="s2">&quot;dump1&quot;</span><span class="p">,</span>
+    <span class="n">dump_step</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="n">dump_minutes</span> <span class="o">=</span> <span class="mf">240.</span><span class="p">,</span>
+    <span class="n">dump_deflate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">exit_after_dump</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">dump_file_sequence</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="restart_dir">
+<code class="descname">restart_dir</code><a class="headerlink" href="#restart_dir" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p>This tells <strong class="program">Smilei</strong> where to find dump files for restart.
+If not defined, it does not restart from a previous dump.</p>
+<p><strong>WARNING:</strong> this path must either absolute or be relative to the simulation directory</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dump_step">
+<code class="descname">dump_step</code><a class="headerlink" href="#dump_step" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">0</td>
+</tr>
+</tbody>
+</table>
+<p>The number of timesteps between each dump of the full simulation.
+If <code class="docutils literal"><span class="pre">0</span></code>, no dump is done.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dump_minutes">
+<code class="descname">dump_minutes</code><a class="headerlink" href="#dump_minutes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><ol class="first last arabic simple" start="0">
+<li></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The number of minutes between each dump of the full simulation (combines with <code class="docutils literal"><span class="pre">dump_step</span></code>).
+If <code class="docutils literal"><span class="pre">0.</span></code>, no dump is done.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dump_deflate">
+<code class="descname">dump_deflate</code><a class="headerlink" href="#dump_deflate" title="Permalink to this definition">¶</a></dt>
+<dd><p><span class="red">to do</span></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="exit_after_dump">
+<code class="descname">exit_after_dump</code><a class="headerlink" href="#exit_after_dump" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal"><span class="pre">True</span></code>, the code stops after the dump.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="dump_file_sequence">
+<code class="descname">dump_file_sequence</code><a class="headerlink" href="#dump_file_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">2</td>
+</tr>
+</tbody>
+</table>
+<p>This tells <strong class="program">Smilei</strong> to keep the last <code class="docutils literal"><span class="pre">n</span></code> dumps for a later restart.
+The default value, 2, saves one extra dump in case of a crash during the file dump.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="file_grouping">
+<code class="descname">file_grouping</code><a class="headerlink" href="#file_grouping" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p>The maximum number of checkpoint files that can be stored in one directory.
+New subdirectories are created according to the total number of files.
+This is useful on filesystem with a limited number of files per directory.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="restart_number">
+<code class="descname">restart_number</code><a class="headerlink" href="#restart_number" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+<p>If provided, the code will restart from that checkpoint, otherwise it uses the most recent one.</p>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="variables-defined-by-smilei">
+<h2>Variables defined by Smilei<a class="headerlink" href="#variables-defined-by-smilei" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">Smilei</strong> passes the following variables to the python interpreter for use in the
+namelist. They should not be re-defined by the user!</p>
+<dl class="data">
+<dt id="smilei_mpi_rank">
+<code class="descname">smilei_mpi_rank</code><a class="headerlink" href="#smilei_mpi_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The MPI rank of the current process.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="smilei_mpi_size">
+<code class="descname">smilei_mpi_size</code><a class="headerlink" href="#smilei_mpi_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of MPI processes.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="smilei_rand_max">
+<code class="descname">smilei_rand_max</code><a class="headerlink" href="#smilei_rand_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>The largest random integer.</p>
+</dd></dl>
+
+<p>As an example of their use, this script randomizes both python&#8217;s
+and <strong class="program">Smilei</strong>&#8216;s random seeds.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span><span class="o">,</span> <span class="nn">math</span>
+<span class="c1"># reshuffle python random generator</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="n">smilei_mpi_rank</span><span class="p">)</span>
+<span class="c1"># get 32bit pseudo random integer to be passed to smilei</span>
+<span class="n">random_seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">smilei_rand_max</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Write a namelist</a><ul>
+<li><a class="reference internal" href="#general-rules">General rules</a></li>
+<li><a class="reference internal" href="#python-workflow">Python workflow</a></li>
+<li><a class="reference internal" href="#main-variables">Main variables</a></li>
+<li><a class="reference internal" href="#load-balancing">Load Balancing</a></li>
+<li><a class="reference internal" href="#moving-window">Moving window</a></li>
+<li><a class="reference internal" href="#species">Species</a></li>
+<li><a class="reference internal" href="#lasers">Lasers</a></li>
+<li><a class="reference internal" href="#external-fields">External fields</a></li>
+<li><a class="reference internal" href="#antennas">Antennas</a></li>
+<li><a class="reference internal" href="#profiles">Profiles</a></li>
+<li><a class="reference internal" href="#walls">Walls</a></li>
+<li><a class="reference internal" href="#collisions">Collisions</a></li>
+<li><a class="reference internal" href="#scalar-diagnostics"><em>Scalar</em> diagnostics</a></li>
+<li><a class="reference internal" href="#fields-diagnostics"><em>Fields</em> diagnostics</a></li>
+<li><a class="reference internal" href="#probe-diagnostics"><em>Probe</em> diagnostics</a></li>
+<li><a class="reference internal" href="#particle-diagnostics"><em>Particle</em> diagnostics</a></li>
+<li><a class="reference internal" href="#screen-diagnostics"><em>Screen</em> diagnostics</a></li>
+<li><a class="reference internal" href="#time-selections">Time selections</a></li>
+<li><a class="reference internal" href="#checkpoints">Checkpoints</a></li>
+<li><a class="reference internal" href="#variables-defined-by-smilei">Variables defined by Smilei</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/namelist.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

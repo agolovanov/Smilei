@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Releases &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Units" href="units.html" />
+    <link rel="prev" title="Highlights" href="highlights.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="units.html" title="Units"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="highlights.html" title="Highlights"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="releases">
+<h1>Releases<a class="headerlink" href="#releases" title="Permalink to this headline">¶</a></h1>
+<p>Major releases are available here as well as on the
+<a class="reference external" href="https://github.com/SmileiPIC/Smilei">GitHub page</a>.
+We greatly appreciate external users trying this code and giving feedback.</p>
+<p>You can <a class="reference internal" href="partners.html"><span class="doc">contact us</span></a> to become a developer of the official releases:
+the <a class="reference external" href="https://llrgit.in2p3.fr/smilei/smilei">developer&#8217;s Gitlab repository</a> is used
+for development, and you will need to ask for a password first,
+but the process is fast and straightforward.</p>
+<hr class="docutils" />
+<div class="section" id="upcoming-changes">
+<h2>Upcoming changes<a class="headerlink" href="#upcoming-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>More OpenMP support</li>
+<li><em>Numpy</em> used for faster python profiles and for filtering track particles</li>
+<li>Fourth order in 3D</li>
+<li>Moving window along y and z</li>
+<li>Tracking particles in <em>Screens</em></li>
+<li>Better time-average for B fields</li>
+</ul>
+<hr class="docutils" />
+</div>
+<div class="section" id="current-release-3-1">
+<span id="latestversion"></span><h2>Current release 3.1<a class="headerlink" href="#current-release-3-1" title="Permalink to this headline">¶</a></h2>
+<p><strong>Download</strong>: <a class="reference external" href="_downloads/smilei-v3.1.tar.gz">Smilei v3.1</a></p>
+<ul class="simple">
+<li><em>Screen</em> diagnostics</li>
+<li>Exporting 3D diagnostics to VTK for reading in ParaView or VisIt</li>
+<li>Partial support of the <a class="reference external" href="https://www.openpmd.org">OpenPMD</a> standard</li>
+<li>Improvements: moving window (OpenMP), 3D projection</li>
+<li>Bugfixes: tracked particles, walls, collisional ionization, etc.</li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li>Outputs of Fields and Tracks are incompatible with 3.0</li>
+<li>The input &#8220;output_dir&#8221; is not supported anymore</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="release-3-0">
+<h2>Release 3.0<a class="headerlink" href="#release-3-0" title="Permalink to this headline">¶</a></h2>
+<p><strong>Download</strong>: <a class="reference external" href="_downloads/smilei-v3.0.tar.gz">Smilei v3.0</a></p>
+<ul class="simple">
+<li><strong>3D geometry</strong></li>
+<li>Field and scalar diagnostics improved for more flexibility and memory saving</li>
+<li>Faster initialization (including Maxwell-Jüttner sampling)</li>
+<li>Post-processing handles restarts</li>
+<li>Bugfixes in checkpoints, timers, memory profile</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="release-2-3">
+<h2>Release 2.3<a class="headerlink" href="#release-2-3" title="Permalink to this headline">¶</a></h2>
+<p><strong>Download</strong>: <a class="reference external" href="_downloads/smilei-v2.3.tar.gz">Smilei v2.3</a></p>
+<ul class="simple">
+<li>Post-processing scripts have been turned into a <em>python</em> module</li>
+<li>Many bugfixes, such as addressing diagnostics efficiency</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="release-2-0">
+<h2>Release 2.0<a class="headerlink" href="#release-2-0" title="Permalink to this headline">¶</a></h2>
+<p><strong>Download</strong>: <a class="reference external" href="_downloads/smilei-v2.2.tar.gz">Smilei v2.2</a></p>
+<ul class="simple">
+<li><strong>state-of-the-art dynamic load balancing</strong></li>
+<li>full <em>python</em> namelist, allowing for complex, user-friendly input</li>
+<li>external fields and antennas</li>
+<li>binary Coulomb collisions</li>
+<li>new diagnostics</li>
+<li><em>python</em> scripts for post-processing</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="release-1-0">
+<h2>Release 1.0<a class="headerlink" href="#release-1-0" title="Permalink to this headline">¶</a></h2>
+<p><strong>Download</strong>: <a class="reference external" href="_downloads/smilei-v1.0.tar.gz">Smilei v1.0</a></p>
+<ul class="simple">
+<li>1D &amp; 2D cartesian geometries</li>
+<li>Moving window</li>
+<li>Hybrid MPI-OpenMP parallelization</li>
+<li>Field ionization</li>
+<li>Some python diagnostics</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Releases</a><ul>
+<li><a class="reference internal" href="#upcoming-changes">Upcoming changes</a></li>
+<li><a class="reference internal" href="#current-release-3-1">Current release 3.1</a></li>
+<li><a class="reference internal" href="#release-3-0">Release 3.0</a></li>
+<li><a class="reference internal" href="#release-2-3">Release 2.3</a></li>
+<li><a class="reference internal" href="#release-2-0">Release 2.0</a></li>
+<li><a class="reference internal" href="#release-1-0">Release 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/releases.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

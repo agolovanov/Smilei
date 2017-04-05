@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallelization basics &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Binary collisions" href="collisions.html" />
+    <link rel="prev" title="PIC algorithms" href="algorithms.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="collisions.html" title="Binary collisions"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="algorithms.html" title="PIC algorithms"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parallelization-basics">
+<h1>Parallelization basics<a class="headerlink" href="#parallelization-basics" title="Permalink to this headline">¶</a></h1>
+<p>For high performance, <strong class="program">Smilei</strong> makes complex use of parallel computing,
+and it is important to understand the basics of this technology. Parallel simply
+means that many processors can run the simulation at the same time, but there is
+much more than that.</p>
+<hr class="docutils" />
+<div class="section" id="nodes-cores-processes-and-threads">
+<h2>Nodes, cores, processes and threads<a class="headerlink" href="#nodes-cores-processes-and-threads" title="Permalink to this headline">¶</a></h2>
+<p>Supercomputers have complex architectures, mainly due to their processors
+capability to <strong>work together on the same memory space</strong>. More precisely, <em>cores</em>
+are grouped in <em>nodes</em> (1). All the cores in one node share the same memory space.
+This hardware architecture is summarized in <a class="reference internal" href="#nodescoresthreads"><span class="std std-numref">Fig. 1</span></a>.</p>
+<div class="figure" id="id1">
+<span id="nodescoresthreads"></span><a class="reference internal image-reference" href="_images/NodesCoresThreads.png"><img alt="_images/NodesCoresThreads.png" src="_images/NodesCoresThreads.png" style="width: 11cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Simplified super-computer architecture.</span></p>
+</div>
+<p>This same figure shows how the software is structured. <em>Processes</em> are the macroscopic
+units which are designed to compute over a reserved space in memory (one process
+will not handle the memory of another process), and manage several cores.
+To treat these cores, a process must provide several <em>threads</em>. A thread is basically the
+sequence of instructions from the program, which must be executed by one core.
+However, a thread is not uniquely associated to one core: a core can run two threads,
+one after the other.</p>
+<p>The association between the software <em>threads</em> and the hardware <em>cores</em> can be more
+complicated. <a class="reference internal" href="#nodewith2processes"><span class="std std-numref">Fig. 2</span></a> shows an example where two processes share the
+same node. In this case, we illustrate the memory of this node as split in two parts because
+the two processes cannot access to the same memory.</p>
+<div class="figure" id="id2">
+<span id="nodewith2processes"></span><a class="reference internal image-reference" href="_images/NodeWith2Processes.png"><img alt="_images/NodeWith2Processes.png" src="_images/NodeWith2Processes.png" style="width: 6cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">An example where two processes share the same node.</span></p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">(1) The terminology of <em>nodes, cores, processes and threads</em> is not universal. Depending
+on the computer, software (etc.), they can have various meanings.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="managing-processes-and-threads">
+<h2>Managing processes and threads<a class="headerlink" href="#managing-processes-and-threads" title="Permalink to this headline">¶</a></h2>
+<p>Although processes do not share their memory, they must sometimes synchronize their
+advance in the execution of the program, or communicate data between each other.
+For instance, to calculate the total energy in the simulation, they must communicate
+their contribution to the others and compute the sum.
+These tasks are accomplished by the Message Passing Interface (MPI) protocol.</p>
+<p>At the thread level, the communications do not work in the same manner because threads
+already share their data. However, they need synchronization and management to decide
+which core handles which thread. This is accomplished by the <em>OpenMP</em> protocol.</p>
+<p>An illustration of the roles of MPI and OpenMP is provided in <a class="reference internal" href="#mpiandopenmp"><span class="std std-numref">Fig. 3</span></a></p>
+<div class="figure" id="id3">
+<span id="mpiandopenmp"></span><a class="reference internal image-reference" href="_images/MPIandOpenMP.png"><img alt="_images/MPIandOpenMP.png" src="_images/MPIandOpenMP.png" style="width: 9cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">MPI handles process-to-process communications, while OpenMP manages threads in a given process.</span></p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="decomposition-of-the-box">
+<h2>Decomposition of the box<a class="headerlink" href="#decomposition-of-the-box" title="Permalink to this headline">¶</a></h2>
+<p>Traditionally, PIC codes would
+split the spatial grid into <span class="math">\(N\)</span> domains, where <span class="math">\(N\)</span> is the number
+of cores. Each core would manage its own domain on a separate memory space,
+and information was communicated between cores using the MPI protocol.
+<strong class="program">Smilei</strong> proposes an more efficient approach:
+it also decomposes the spatial grid in several domains,
+but one core is not directly associated to one domain.</p>
+<p>Let us explain this difference in details.
+<a class="reference internal" href="#patchdecomposition"><span class="std std-numref">Fig. 4</span></a> gives an example of a grid containing 960 cells.
+It is decomposed in <span class="math">\(4\times8 = 32\)</span> domains, called <strong>patches</strong>.
+Each patch has <span class="math">\(5\times6\)</span> cells.
+These patch size is actually reasonable for <strong class="program">Smilei</strong>, whereas
+traditional PIC codes would have much larger domains.</p>
+<p>The issue is now to decide where these patches will be stored in the memory,
+and to choose which cores should do which patches.
+Recall that all the cores handled by one process share the same memory:
+we will refer to this memory as an <em>MPI region</em>.
+This means that one process manages one exclusive MPI region.
+<a class="reference internal" href="#patchdecomposition"><span class="std std-numref">Fig. 4</span></a> shows an example with the 32 patches split in 5 regions
+recognized by their different colors.
+Note that these regions are all contiguous, but not necessarily rectangular.</p>
+<div class="figure" id="id4">
+<span id="patchdecomposition"></span><a class="reference internal image-reference" href="_images/PatchDecomposition.png"><img alt="_images/PatchDecomposition.png" src="_images/PatchDecomposition.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Decomposition of a grid in <em>patches</em> and <em>MPI regions</em>.</span></p>
+</div>
+<p>Each MPI region is handled by all the threads of the process. For example, if there are
+4 threads in the process that handles the region colored in green, this means the
+4 threads will handle 10 patches. The 4 threads will work in parallel, patch by patch,
+until all patches are done.</p>
+<p>The great advantage of this scheme is that, inside one MPI region, the threads do not
+need to wait for their friends to go to the next patch; they can continue working on
+the available patches, thus avoiding long waiting times.
+This is a form of <strong>local load balancing</strong>.</p>
+<p class="rubric">Rules</p>
+<ul class="simple">
+<li>In each direction <span class="math">\(x\)</span>, <span class="math">\(y\)</span>, <span class="math">\(z\)</span>, the number of patches must be
+a power of 2.</li>
+<li>There must be more patches than threads.</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="load-balancing-between-mpi-regions">
+<h2>Load balancing between MPI regions<a class="headerlink" href="#load-balancing-between-mpi-regions" title="Permalink to this headline">¶</a></h2>
+<p>As we just explained, threads treat the patches in one MPI region asynchronously to
+balance their loads carried. Unfortunately, it may not be sufficient.
+Indeed, when one MPI region holds much more load than the others, it will take a long
+time to compute, while the other processes have already finished and wait for this one.
+This can cause large delays.</p>
+<p><strong class="program">Smilei</strong> has an algorithm able to reduce this imbalance by exchanging patches
+from one MPI region to another. A process that has too much load will give patches to
+other processes in order to reduce the size of its MPI region. This algorithm is based
+on an ordering of the patches by a <em>Hilbert curve</em>, as drawn in
+<a class="reference internal" href="#patchdecompositionhilbert"><span class="std std-numref">Fig. 5</span></a>. One MPI region contains only patches that contiguously
+follow this curve. If this &#8220;portion&#8221; of the curve has too much load, it will send
+some patches to the portions ahead or after, along the same curve. By repeating this
+operation every now and then, we ensure that all regions manage an equitable number
+of patches.</p>
+<div class="figure" id="id5">
+<span id="patchdecompositionhilbert"></span><a class="reference internal image-reference" href="_images/PatchDecompositionHilbert.png"><img alt="_images/PatchDecompositionHilbert.png" src="_images/PatchDecompositionHilbert.png" style="width: 8cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">The shape of the Hilbert curve which determines the patch order.</span></p>
+</div>
+<p>As the patches can be small, moving a patch from one MPI region to another is
+fast: it can fit more easily in the cache, and does not require heavy memory
+access.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="recommendations">
+<h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>Have as many MPI processes as nodes</strong> in order to optimize the memory distribution.</p>
+</li>
+<li><p class="first">On each node, <strong>have as many threads as cores per node</strong>.
+If you have less threads than cores, you will not be using all your cores.
+Use more threads than cores only if hyper-threading is recommended on your architecture.</p>
+</li>
+<li><p class="first">Use dynamic scheduling for the OpenMP parallelism, by setting the environment variable <code class="docutils literal"><span class="pre">OMP_SCHEDULE</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OMP_SCHEDULE</span><span class="o">=</span><span class="n">dynamic</span>
+</pre></div>
+</div>
+<p>This affects only the particles treatment, which will dynamically assign threads.
+Note that fields are always statically assigned to threads.</p>
+</li>
+<li><p class="first"><strong>Have small patches</strong>. They can efficiently be as small as 5 cells in each direction.
+This allows good cache use, but also ensures that you have at least as many threads
+as patches, so that they can be treated in parallel.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Parallelization basics</a><ul>
+<li><a class="reference internal" href="#nodes-cores-processes-and-threads">Nodes, cores, processes and threads</a></li>
+<li><a class="reference internal" href="#managing-processes-and-threads">Managing processes and threads</a></li>
+<li><a class="reference internal" href="#decomposition-of-the-box">Decomposition of the box</a></li>
+<li><a class="reference internal" href="#load-balancing-between-mpi-regions">Load balancing between MPI regions</a></li>
+<li><a class="reference internal" href="#recommendations">Recommendations</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/parallelization.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Binary collisions &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Field ionization" href="field_ionization.html" />
+    <link rel="prev" title="Parallelization basics" href="parallelization.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="field_ionization.html" title="Field ionization"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="parallelization.html" title="Parallelization basics"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="binary-collisions">
+<h1>Binary collisions<a class="headerlink" href="#binary-collisions" title="Permalink to this headline">¶</a></h1>
+<p>Relativistic binary collisions between particles have been implemented in
+<strong class="program">Smilei</strong> with the same scheme as the one developed for the
+code <strong class="program">Calder</strong>. The following references describe the physics
+and numerics of this implementation.</p>
+<div class="line-block">
+<div class="line"><a class="reference internal" href="material.html#perez2012" id="id1">[Perez2012]</a> gives an overview of the technique.</div>
+<div class="line"><a class="reference internal" href="material.html#nanbu1997" id="id2">[Nanbu1997]</a> and <a class="reference internal" href="material.html#nanbu1998" id="id3">[Nanbu1998]</a> give the original technique from which <a class="reference internal" href="material.html#perez2012" id="id4">[Perez2012]</a> was developed.</div>
+<div class="line"><a class="reference internal" href="material.html#sentoku2008" id="id5">[Sentoku2008]</a>, <a class="reference internal" href="material.html#lee1984" id="id6">[Lee1984]</a> and <a class="reference internal" href="material.html#frankel1979" id="id7">[Frankel1979]</a> provide additional information.</div>
+</div>
+<p>Please refer to <a class="reference internal" href="namelist.html#collisions"><span class="std std-ref">that doc</span></a> for an explanation of how to add collisions in the namelist file.</p>
+<hr class="docutils" />
+<div class="section" id="the-binary-collision-scheme">
+<h2>The binary collision scheme<a class="headerlink" href="#the-binary-collision-scheme" title="Permalink to this headline">¶</a></h2>
+<p>Collisions are calculated at each timestep and for each collision block
+given in the input file.</p>
+<p>If <em>intra-collisions</em>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Create one array of indices pointing to all particles of the species group.</div>
+<div class="line">Shuffle the array.</div>
+<div class="line">Split the array in two halves.</div>
+</div>
+</div></blockquote>
+<p>If <em>inter-collisions</em>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Create two arrays of indices pointing to all particles of each species group.</div>
+<div class="line">Shuffle the largest array. The other array is not shuffled.</div>
+<div class="line">=&gt; The two resulting arrays represent pairs of particles (see algorithm in <a class="reference internal" href="material.html#nanbu1998" id="id8">[Nanbu1998]</a>).</div>
+</div>
+</div></blockquote>
+<p>Calculate a few intermediate quantities:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Particle density <span class="math">\(n_1\)</span> of group 1.</div>
+<div class="line">Particle density <span class="math">\(n_2\)</span>  of group 2.</div>
+<div class="line"><em>Crossed</em> particle density <span class="math">\(n_{12}\)</span> (see <a class="reference internal" href="material.html#perez2012" id="id9">[Perez2012]</a>).</div>
+<div class="line">Other constants.</div>
+</div>
+</div></blockquote>
+<p>For each pair of particles:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Calculate the momenta in the center-of-mass (COM) frame.</div>
+<div class="line">Calculate the coulomb log if requested (see <a class="reference internal" href="material.html#perez2012" id="id10">[Perez2012]</a>).</div>
+<div class="line">Calculate the parameter <span class="math">\(s\)</span> and its correction at low temperature (see <a class="reference internal" href="material.html#perez2012" id="id11">[Perez2012]</a>).</div>
+<div class="line">Pick the deflection angle (see <a class="reference internal" href="material.html#nanbu1997" id="id12">[Nanbu1997]</a>).</div>
+<div class="line">Deflect particles in the COM frame and go back to the laboratory frame.</div>
+</div>
+</div></blockquote>
+<p class="rubric">Modification in Smilei</p>
+<p>A typo has been introduced in <a class="reference internal" href="material.html#perez2012" id="id13">[Perez2012]</a>, Eq. (22), corresponding to the calculation of
+the Coulomb Logarithm: the last parenthesis is written as a squared expression,
+but should not. This was corrected in <strong class="program">Smilei</strong>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="test-cases-for-collisions">
+<h2>Test cases for collisions<a class="headerlink" href="#test-cases-for-collisions" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">1. Beam relaxation</p>
+<p>An electron beam with narrow energy spread enters an ion background with <span class="math">\(T_i=10\)</span> eV.
+The ions are of very small mass <span class="math">\(m_i=10 m_e\)</span> to speed-up the calculation.
+Only e-i collisions are calculated.
+The beam gets strong isotropization =&gt; the average velocity relaxes to zero.</p>
+<p>Three figures show the time-evolution of the longitudinal <span class="math">\(\left&lt;v_\|\right&gt;\)</span>
+and transverse velocity <span class="math">\(\sqrt{\left&lt;v_\perp^2\right&gt;}\)</span></p>
+<ul class="simple">
+<li><a class="reference internal" href="#beam1"><span class="std std-numref">Fig. 6</span></a> : initial velocity = 0.05, ion charge = 1</li>
+<li><a class="reference internal" href="#beam2"><span class="std std-numref">Fig. 7</span></a> : initial velocity = 0.01, ion charge = 1</li>
+<li><a class="reference internal" href="#beam3"><span class="std std-numref">Fig. 8</span></a> : initial velocity = 0.01, ion charge = 3</li>
+</ul>
+<p>Each of these figures show 3 different blue and red curves which correspond to different
+ratios of particle weights: 0.1, 1, and 10.</p>
+<div class="figure" id="id24">
+<span id="beam1"></span><a class="reference internal image-reference" href="_images/beam_relaxation123.png"><img alt="_images/beam_relaxation123.png" src="_images/beam_relaxation123.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Relaxation of an electron beam. Initial velocity = 0.05, ion charge = 1.</span></p>
+</div>
+<div class="figure" id="id25">
+<span id="beam2"></span><a class="reference internal image-reference" href="_images/beam_relaxation456.png"><img alt="_images/beam_relaxation456.png" src="_images/beam_relaxation456.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">Relaxation of an electron beam. Initial velocity = 0.01, ion charge = 1.</span></p>
+</div>
+<div class="figure" id="id26">
+<span id="beam3"></span><a class="reference internal image-reference" href="_images/beam_relaxation789.png"><img alt="_images/beam_relaxation789.png" src="_images/beam_relaxation789.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">Relaxation of an electron beam. Initial velocity = 0.01, ion charge = 3.</span></p>
+</div>
+<p>The black lines correspond to the theoretical rates taken from the NRL formulary:</p>
+<div class="math">
+\[\nu_\| = -\left(1+\frac{m_e}{m_i}\right)\nu_0
+\quad\textrm{and}\quad
+\nu_\perp = 2\;\nu_0
+\quad\textrm{where}\quad
+\nu_0=\frac{e^4\,Z^{\star 2}\,n_i\,\ln\Lambda } { 4 \pi \epsilon_0^2 \,m_e^2\,v_e^3 }\]</div>
+<p>The distribution is quickly non-Maxwellian so that theory is valid only at the beginning.</p>
+<p class="rubric">2. Thermalization</p>
+<p>A population of electrons has a different temperature from that of the ion population.
+Through e-i collisions, the two temperatures become equal.
+The ions are of very small mass <span class="math">\(m_i=10 m_e\)</span> to speed-up the calculation.
+Three cases are simulated, corresponding to different ratios of weights: 0.2, 1 and 5.
+They are plotted in <a class="reference internal" href="#thermalization"><span class="std std-numref">Fig. 9</span></a>.</p>
+<div class="figure" id="id27">
+<span id="thermalization"></span><a class="reference internal image-reference" href="_images/thermalisation_ei123.png"><img alt="_images/thermalisation_ei123.png" src="_images/thermalisation_ei123.png" style="width: 9cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Thermalization between two species.</span></p>
+</div>
+<p>The black lines correspond to the theoretical rates taken from the NRL formulary:</p>
+<div class="math">
+\[\nu_\epsilon=\frac{e^4\,Z^{\star 2} \sqrt{m_em_i}\,n_i\,\ln\Lambda }
+{ 8 \epsilon_0^2 \,\left(m_eT_e+m_iT_i\right)^{3/2} }\]</div>
+<p class="rubric">3. Temperature isotropization</p>
+<p>Electrons have a longitudinal temperature different from their transverse temperature.
+They collide only with themselves (intra-collisions) and the anisotropy disappears
+as shown in <a class="reference internal" href="#temperature-isotropization"><span class="std std-numref">Fig. 10</span></a>.</p>
+<div class="figure" id="id28">
+<span id="temperature-isotropization"></span><a class="reference internal image-reference" href="_images/temperature_isotropization1.png"><img alt="_images/temperature_isotropization1.png" src="_images/temperature_isotropization1.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Temperature isotropization of an electron population.</span></p>
+</div>
+<p>The black lines correspond to the theoretical rates taken from the NRL formulary:</p>
+<div class="math">
+\[\nu_T=\frac{e^4 \,n_e\,\ln\Lambda } { 8\pi^{3/2} \epsilon_0^2 \,m_e^{1/2}T_\|^{3/2} }
+A^{-2} \left[-3+(3-A)\frac{\rm{arctanh}(\sqrt{A})}{\sqrt{A}}\right]
+\quad \rm{where}\quad A=1-\frac{T_\perp}{T_\|}\]</div>
+<p class="rubric">4. Maxwellianization</p>
+<p>Electrons start with zero temperature along <span class="math">\(y\)</span> and <span class="math">\(z\)</span>.
+Their velocity distribution along <span class="math">\(x\)</span> is rectangular.
+They collide only with themselves and the rectangle becomes a maxwellian
+as shown in <a class="reference internal" href="#maxwellianization"><span class="std std-numref">Fig. 11</span></a>.</p>
+<div class="figure" id="id29">
+<span id="maxwellianization"></span><a class="reference internal image-reference" href="_images/Maxwellianization1.png"><img alt="_images/Maxwellianization1.png" src="_images/Maxwellianization1.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Maxwellianization of an electron population.
+Each blue curve is the distribution at a given time.
+The red curve is an example of a gaussian function.</span></p>
+</div>
+<p class="rubric">5. Stopping power</p>
+<p>Test electrons (very low density) collide with background electrons of density
+<span class="math">\(10\,n_c\)</span> and <span class="math">\(T_e=5\)</span> keV.
+Depending on their initial velocity, they are slowed down at different rates,
+as shown in <a class="reference internal" href="#stoppingpower"><span class="std std-numref">Fig. 12</span></a>.</p>
+<div class="figure" id="id30">
+<span id="stoppingpower"></span><a class="reference internal image-reference" href="_images/Stopping_power123.png"><img alt="_images/Stopping_power123.png" src="_images/Stopping_power123.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Stopping power of test electrons into a background electron population.
+Each point is one simulation. The black line is Frankel&#8217;s theory <a class="reference internal" href="material.html#frankel1979" id="id14">[Frankel1979]</a>.</span></p>
+</div>
+<p class="rubric">6. Conductivity</p>
+<p>Solid-density Cu is simulated at different temperatures (e-i equilibrium) with only
+e-i collisions. An electric field of <span class="math">\(E=3.2\)</span> GV/m (0.001 in code units) is
+applied using two charged layers on each side of the solid Cu.
+The electron velocity increases until a limit value <span class="math">\(v_f\)</span>.
+The resulting conductivity <span class="math">\(\sigma=en_ev_f/E\)</span> is compared in
+<a class="reference internal" href="#conductivity"><span class="std std-numref">Fig. 13</span></a> to the models in <a class="reference internal" href="material.html#lee1984" id="id15">[Lee1984]</a> and <a class="reference internal" href="material.html#perez2012" id="id16">[Perez2012]</a>.</p>
+<div class="figure" id="id31">
+<span id="conductivity"></span><a class="reference internal image-reference" href="_images/conductivity.png"><img alt="_images/conductivity.png" src="_images/conductivity.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Conductivity of solid-density copper. Each point is one simulation.</span></p>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="collisional-ionization">
+<span id="collionization"></span><h2>Collisional ionization<a class="headerlink" href="#collisional-ionization" title="Permalink to this headline">¶</a></h2>
+<p>The binary collisions can also be ionizing if they are <strong>electron-ion</strong> collisions.
+The approach is almost the same as that provided in <a class="reference internal" href="material.html#perez2012" id="id17">[Perez2012]</a>.</p>
+<p>When ionization is requested by setting <code class="docutils literal"><span class="pre">ionizing=True</span></code>, a few additional operations
+are executed:</p>
+<ul class="simple">
+<li>At the beginning of the run, cross-sections are calculated from tabulated binding
+energies (available for ions up to atomic number 100). These cross-sections are then
+tabulated for each requested ion species.</li>
+<li>Each timestep, the particle density <span class="math">\(n = n_e n_i/n_{ei}\)</span>
+(similar to the densities above for collisions) is calculated.</li>
+<li>During each collision, a probability for ionization is computed. If successful,
+the ion charge is increased, the incident electron is slowed down, and a new electron
+is created.</li>
+</ul>
+<p class="rubric">Warnings</p>
+<ul class="simple">
+<li>This scheme does not account for recombination, which would balance ionization
+over long time scales.</li>
+</ul>
+<p class="rubric">Relativistic change of frame</p>
+<p>A modification has been added to the theory of <a class="reference internal" href="material.html#perez2012" id="id18">[Perez2012]</a> in order to account for the
+laboratory frame being different from the ion frame. Considering <span class="math">\(\overrightarrow{p_e}\)</span>
+and <span class="math">\(\overrightarrow{p_i}\)</span> the electron and ion momenta in the laboratory frame,
+and their associated Lorentz factors <span class="math">\(\gamma_e\)</span> and <span class="math">\(\gamma_i\)</span>, we define
+<span class="math">\(\overrightarrow{q_e}=\overrightarrow{p_e}/(m_e c)\)</span> and
+<span class="math">\(\overrightarrow{q_i}=\overrightarrow{p_i}/(m_i c)\)</span>.
+The Lorentz factor of the electron in the ion frame is
+<span class="math">\(\gamma_e^\star=\gamma_e\gamma_i-\overrightarrow{q_e}\cdot\overrightarrow{q_i}\)</span>.
+The probability for ionization reads:</p>
+<div class="math">
+\[P = 1-\exp\left( - v_e \sigma n \Delta t \right) = 1-\exp\left( -V^\star \sigma^\star n \Delta t \right)\]</div>
+<p>where <span class="math">\(v_e\)</span> is the electron velocity in the laboratory frame,
+<span class="math">\(\sigma\)</span> is the cross-section in the laboratory frame, <span class="math">\(\sigma^\star\)</span>
+is the cross-section in the ion frame, and
+<span class="math">\(V^\star=c\sqrt{\gamma_e^{\star\,2}-1}/(\gamma_e\gamma_i)\)</span>.</p>
+<p>The loss of energy <span class="math">\(m_ec^2 \delta\gamma\)</span> of the incident electron translates into a change in momentum
+<span class="math">\({q_e^\star}' = \alpha_e q_e^\star\)</span> in the ion frame, with
+<span class="math">\(\alpha_e=\sqrt{(\gamma_e^\star-\delta\gamma)^2-1}/\sqrt{\gamma_e^{\star2}-1}\)</span>.
+In the laboratory frame, it becomes
+<span class="math">\(\overrightarrow{q_e'}=\alpha_e\overrightarrow{q_e}+((1-\alpha_e)\gamma_e^\star-\delta\gamma)\overrightarrow{q_i}\)</span>.</p>
+<p>A similar operation is done for defining the momentum of the new electron in the lab frame.
+It is created with energy <span class="math">\(m_ec^2 (\gamma_w-1)\)</span> and its momentum is
+<span class="math">\(q_w^\star = \alpha_w q_e^\star\)</span> in the ion frame, with
+<span class="math">\(\alpha_w=\sqrt{\gamma_w^2-1}/\sqrt{\gamma_e^{\star 2}-1}\)</span>.
+In the laboratory frame, it becomes
+<span class="math">\(\overrightarrow{q_w}=\alpha_w\overrightarrow{q_e}+(\gamma_w-\alpha_w\gamma_e^\star)\overrightarrow{q_i}\)</span>.</p>
+<p class="rubric">Multiple ionization</p>
+<p>A modification has been added to the theory of <a class="reference internal" href="material.html#perez2012" id="id19">[Perez2012]</a> in order to account for
+multiple ionization in a single timestep. The approach for field ionization in
+<a class="reference internal" href="material.html#nuter2011" id="id20">[Nuter2011]</a> has been adapted to calculate the successive impact ionization probabilities
+when an ion is ionized several times in a row.</p>
+<p>Writing the probability to not ionize an ion already ionized <span class="math">\(i\)</span> times as
+<span class="math">\(\bar{P}^i = \exp\left( -W_i\Delta t\right)\)</span>, and defining
+<span class="math">\(R^m_n = (1-W_m/W_n)^{-1}\)</span>, we can calculate the probability to ionize <span class="math">\(k\)</span> times
+the ion:</p>
+<div class="math">
+\[\begin{split}P^i_k = \left\{
+\begin{array}{ll}
+\bar{P}^i
+&amp;
+\quad\mathrm{if}\quad k=0
+\\
+\sum\limits_{p=0}^{k-1} R^{i+k}_{i+p} \left(\bar{P}^{i+k} - \bar{P}^{i+p}\right)
+\prod\limits_{j=0,j\ne p}^{k-1} R^{i+p}_{i+j}
+&amp;
+\quad\mathrm{if}\quad 0&lt;k&lt;k_\mathrm{max}
+\\
+\sum\limits_{p=0}^{k-1} \left[ 1+R^{i+k}_{i+p}\left(\frac{W_{i+k}}{W_{i+p}}\bar{P}^{i+p} - \bar{P}^{i+k}\right) \right]
+\prod\limits_{j=0,j\ne p}^{k-1} R^{i+p}_{i+j}
+&amp;
+\quad\mathrm{if}\quad k=k_\mathrm{max}
+\end{array}
+\right.\end{split}\]</div>
+<p>where <span class="math">\(k_\mathrm{max} = Z-Z^\star\)</span>.</p>
+<p>The cumulative probability <span class="math">\(F^i_k = \sum_{j=0}^{k} P^i_j\)</span> provides an efficient
+way to pick when the ionization stops: we pick a random number <span class="math">\(U\in [0,1]\)</span> and
+loop from <span class="math">\(k=0\)</span> to <span class="math">\(k_\mathrm{max}\)</span>. We stop ionizing when <span class="math">\(F^i_k&gt;U\)</span>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="test-cases-for-ionization">
+<h2>Test cases for ionization<a class="headerlink" href="#test-cases-for-ionization" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">1. Ionization rate</p>
+<p>A cold plasma of <span class="math">\(\mathrm{Al}^{3+}\)</span> is set with density <span class="math">\(n_e=10^{21} \mathrm{cm}^{-3}\)</span>
+and with all electrons drifting at a velocity <span class="math">\(v_e=0.03\,c\)</span>. The charge state of ions
+versus time is shown in <a class="reference internal" href="#ionizationrate"><span class="std std-numref">Fig. 14</span></a> where the three dotted curves correspond
+to three different weight ratios between electrons and ions.</p>
+<div class="figure" id="id32">
+<span id="ionizationrate"></span><a class="reference internal image-reference" href="_images/ionization_rate.png"><img alt="_images/ionization_rate.png" src="_images/ionization_rate.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Ionization of an aluminium plasma by drifting electrons.</span></p>
+</div>
+<p>The theoretical curve (in black) corresponds to <span class="math">\(1-\exp\left(v_en_e\sigma t\right)\)</span>
+where <span class="math">\(\sigma\)</span> is the ionization cross section of <span class="math">\(\mathrm{Al}^{3+}\)</span> at the
+right electron energy. The discrepancy at late time is due to the changing velocity
+distributions and to the next level starting to ionize.</p>
+<p class="rubric">2. Inelastic stopping power</p>
+<p>A cold, non-ionized Al plasma is set with density <span class="math">\(n_e=10^{21} \mathrm{cm}^{-3}\)</span>.
+Electrons of various initial velocities are slowed down by ionizing collisions and their
+energy loss is recorded as a function of time.</p>
+<p>A few examples are given in the left graph of <a class="reference internal" href="#ionizationstoppinpower"><span class="std std-numref">Fig. 15</span></a>.
+The theoretical curve is obtained from <a class="reference internal" href="material.html#rohrlich1954" id="id21">[Rohrlich1954]</a>. Note that this theory does not
+work below a certain average ionization energy, in our case <span class="math">\(\sim 200\)</span> eV.</p>
+<div class="figure" id="id33">
+<span id="ionizationstoppinpower"></span><a class="reference internal image-reference" href="_images/ionization_stopping_power.png"><img alt="_images/ionization_stopping_power.png" src="_images/ionization_stopping_power.png" style="width: 14cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">Left: ionization slowing down versus time, for electrons injected at various
+initial energies into cold Al. Right: corresponding stopping power versus initial
+electron energy.</span></p>
+</div>
+<p>In the same figure, the graph on the right-hand-side provides the stopping power value
+in the same context, at different electron energies. It is compared to the same theory.</p>
+<p class="rubric">3. Multiple ionization</p>
+<p>If the timestep is large, multiple ionization can occur, especially with cold high-Z
+material and high-energy electrons. The multiple ionization algorithm is not perfect,
+as it does not shuffle the particles for each ionization. Thus, good statistical
+sampling is reached after several timesteps. To test the potential error,
+we ran simulations of electrons at 1 MeV incident on cold atoms. The evolution of the
+secondary electron density is monitored versus time in <a class="reference internal" href="#ionizationmultiple"><span class="std std-numref">Fig. 16</span></a>.</p>
+<div class="figure" id="id34">
+<span id="ionizationmultiple"></span><a class="reference internal image-reference" href="_images/ionization_multiple.png"><img alt="_images/ionization_multiple.png" src="_images/ionization_multiple.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">Secondary electron density <em>vs</em> time, for cold plasmas traversed by a 1 MeV electron beam.</span></p>
+</div>
+<p>The solid lines correspond to a very-well resolved ionization, whereas the dashed lines
+correspond to a large timestep. A difference is visible initially, but decreases
+quickly as the statistical sampling increases and as the subsequent ionization
+cross-sections decrease.</p>
+<p class="rubric">3. Effect of neglecting recombination</p>
+<p>As recombination is not accounted for, we can expect excess ionization to occur indefinitely
+without being balanced to equilibrium. However, in many cases, the recombination rate
+is small and can be neglected over the duration of the simulation. We provide an example
+that is relevant to picosecond-scale laser-plasma interaction. Plasmas initially at
+a density of 10 times the critical density are given various initial temperatures.
+Ionization initially increases while the temperature decreases, until, after a while,
+their charge state stagnates (it still increases, but very slowly).
+In <a class="reference internal" href="#ionizationrecombination"><span class="std std-numref">Fig. 17</span></a>, these results are compared to a Thomas-Fermi model
+from <a class="reference internal" href="material.html#desjarlais2001" id="id22">[Desjarlais2001]</a>.</p>
+<div class="figure" id="id35">
+<span id="ionizationrecombination"></span><a class="reference internal image-reference" href="_images/ionization_recombination.png"><img alt="_images/ionization_recombination.png" src="_images/ionization_recombination.png" style="width: 12cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 17 </span><span class="caption-text">Final charge state of various plasmas at various temperatures.</span></p>
+</div>
+<p>The model does not account for detailed ionization potentials. It provides a rough
+approximation, and is particularly questionable for low temperatures or high Z.
+We observe that Smilei&#8217;s approach for impact ionization provides decent estimates
+of the ionization state. Detailed comparison to atomic codes has not been done yet.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="collisions-debugging">
+<h2>Collisions debugging<a class="headerlink" href="#collisions-debugging" title="Permalink to this headline">¶</a></h2>
+<p>Using the parameter <code class="docutils literal"><span class="pre">debug_every</span></code> in a <code class="docutils literal"><span class="pre">Collisions()</span></code> group (see <a class="reference internal" href="namelist.html#collisions"><span class="std std-ref">Collisions</span></a>)
+will create a file with info about these collisions.
+These information are stored in the files &#8220;Collisions0.h5&#8221;, &#8220;Collisions1.h5&#8221;, etc.</p>
+<dl class="docutils">
+<dt>The <em>hdf5</em> files are structured as follows:</dt>
+<dd>One HDF5 file contains several groups called <code class="docutils literal"><span class="pre">&quot;t********&quot;</span></code> where <code class="docutils literal"><span class="pre">&quot;********&quot;</span></code>
+is the timestep. Each of these groups contains several arrays, which represent
+quantities <em>vs.</em> space.</dd>
+</dl>
+<p>The available arrays are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">s</span></code>: defined in <a class="reference internal" href="material.html#perez2012" id="id23">[Perez2012]</a>: <span class="math">\(s=N\left&lt;\theta^2\right&gt;\)</span>, where <span class="math">\(N\)</span> is
+the typical number of real collisions during a timestep, and
+<span class="math">\(\left&lt;\theta^2\right&gt;\)</span> is the average square deviation of individual
+real collisions. This quantity somewhat represents the typical amount of angular
+deflection accumulated during one timestep.
+<strong>It is recommended that</strong> <span class="math">\(s&lt;1\)</span> <strong>in order to have realistic collisions.</strong></li>
+<li><code class="docutils literal"><span class="pre">coulomb_log</span></code>: average Coulomb logarithm.</li>
+<li><code class="docutils literal"><span class="pre">debyelength</span></code>: Debye length (not provided if all Coulomb logs are manually defined).</li>
+</ul>
+</div></blockquote>
+<p>The arrays have the same dimension as the plasma, but each element of these arrays
+is an average over all the collisions occurring in a single <em>patch</em>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Binary collisions</a><ul>
+<li><a class="reference internal" href="#the-binary-collision-scheme">The binary collision scheme</a></li>
+<li><a class="reference internal" href="#test-cases-for-collisions">Test cases for collisions</a></li>
+<li><a class="reference internal" href="#collisional-ionization">Collisional ionization</a></li>
+<li><a class="reference internal" href="#test-cases-for-ionization">Test cases for ionization</a></li>
+<li><a class="reference internal" href="#collisions-debugging">Collisions debugging</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/collisions.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

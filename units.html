@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Units &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PIC algorithms" href="algorithms.html" />
+    <link rel="prev" title="Releases" href="releases.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="algorithms.html" title="PIC algorithms"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="releases.html" title="Releases"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="units">
+<h1>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h1>
+<p>Just as any PIC code, <strong class="program">Smilei</strong> handles only <strong>dimension-less variables</strong>,
+normalized to <em>reference</em> quantities.</p>
+<hr class="docutils" />
+<div class="section" id="basic-reference-quantities">
+<h2>Basic reference quantities<a class="headerlink" href="#basic-reference-quantities" title="Permalink to this headline">¶</a></h2>
+<p>The speed of light, the elementary charge and the electron mass provide the basis
+of the normalizations in <strong class="program">Smilei</strong>:</p>
+<ul class="simple">
+<li>Reference electric charge <span class="math">\(Q_r = e\)</span> (the elementary charge)</li>
+<li>Reference mass <span class="math">\(M_r = m_e\)</span> (the electron mass)</li>
+<li>Reference velocity <span class="math">\(V_r = c\)</span> (the speed of light)</li>
+</ul>
+<p>We can derive from these:</p>
+<ul class="simple">
+<li>a reference energy <span class="math">\(K_r = m_e c^2\)</span></li>
+<li>a reference momentum <span class="math">\(P_r = m_e c\)</span></li>
+</ul>
+<p>Even with these normalizations, <strong class="program">Smilei</strong> <strong>does not know the scale of the problem</strong>:
+it lacks a reference distance, or equivalently, a reference time.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="arbitrary-reference-quantities">
+<h2>Arbitrary reference quantities<a class="headerlink" href="#arbitrary-reference-quantities" title="Permalink to this headline">¶</a></h2>
+<p>Instead of choosing a physical constant (for example, the electron radius) as a reference,
+the scale of the problem is not decided <em>a priori</em>, and the user is free to scale the result
+of the simulation to any value.
+In fact, quantities are proportional an <em>unknown</em> reference frequency
+<span class="math">\(\omega_r\)</span>, which can be scaled by the user <em>a posteriori</em>.</p>
+<p>Usually, <span class="math">\(\omega_r\)</span> will be an important frequency of the problem.
+For example, if there is a laser, it could be the laser frequency.
+Or it could be the electron plasma frequency.</p>
+<p>From this reference frequency <span class="math">\(\omega_r\)</span>, we define:</p>
+<ul class="simple">
+<li>a reference time <span class="math">\(T_r = 1/\omega_r\)</span></li>
+<li>a reference length <span class="math">\(L_r = c/\omega_r\)</span></li>
+<li>a reference electric field <span class="math">\(E_r = m_e c \omega_r / e\)</span></li>
+<li>a reference magnetic field <span class="math">\(B_r = m_e \omega_r / e\)</span></li>
+<li>a reference particle density <span class="math">\(N_r = \varepsilon_0 m_e \omega_r^2 /e^2\)</span></li>
+<li>a reference current <span class="math">\(J_r = c\, e\, N_r\)</span></li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Counter-intuitively, the reference density <span class="math">\(N_r\)</span> is <strong>not equal</strong> to <span class="math">\(L_r^{-3}\)</span>.</p>
+</div>
+<p>Normalizing all quantities to these references is convenient for resolving Maxwell&#8217;s equations,
+as it converts them into a dimension-less set of equations:</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}\mathbf{\nabla}\cdot\mathbf{E} = \rho
+\quad\quad
+\nabla\cdot\mathbf{B} = 0\\\nabla\times\mathbf{E} = - \partial_t \mathbf{B}
+\quad\quad
+\nabla\times\mathbf{B} = \mathbf{j} + \partial_t \mathbf{E}\end{aligned}\end{align} \]</div>
+<p>where <span class="math">\(\mathbf{E}\)</span>, <span class="math">\(\mathbf{B}\)</span>, <span class="math">\(\mathbf{j}\)</span> and <span class="math">\(\mathbf{\rho}\)</span>
+are the electric field, magnetic field, current density and charge density, normalized to
+<span class="math">\(E_r\)</span>, <span class="math">\(B_r\)</span>, <span class="math">\(J_r\)</span> and <span class="math">\(Q_r N_r\)</span>, respectively. Note that the
+temporal and spatial derivatives are also normalized to <span class="math">\(T_r\)</span> and <span class="math">\(L_r\)</span>, respectively.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="tips-for-the-namelist">
+<h2>Tips for the namelist<a class="headerlink" href="#tips-for-the-namelist" title="Permalink to this headline">¶</a></h2>
+<p>In the <a class="reference internal" href="namelist.html"><span class="doc">namelist</span></a>, the user must provide all parameters in units of <span class="math">\(Q_r\)</span>,
+<span class="math">\(M_r\)</span>, <span class="math">\(V_r\)</span>, <span class="math">\(K_r\)</span>, <span class="math">\(P_r\)</span>, <span class="math">\(T_r\)</span>, <span class="math">\(L_r\)</span>, <span class="math">\(E_r\)</span>,
+<span class="math">\(B_r\)</span>, <span class="math">\(N_r\)</span> or <span class="math">\(J_r\)</span>.</p>
+<p>This may be cumbersome if you know your input data in other units.
+However, the namelist is actually a <em>python</em> code that can compute conversions easily.</p>
+<p>For example, let us assume that you know your problem size in units of the wavelength.
+Knowing that the reference wavelength is <span class="math">\(2\pi L_r\)</span>, you can multiply all your
+lengths by <span class="math">\(2\pi\)</span>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="n">lambda_</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">cell_length</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span> <span class="o">*</span> <span class="n">lambda_</span><span class="p">]</span>
+<span class="n">sim_length</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">100.</span> <span class="o">*</span> <span class="n">lambda_</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="problems-requiring-explicit-units">
+<h2>Problems requiring explicit units<a class="headerlink" href="#problems-requiring-explicit-units" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, <strong class="program">Smilei</strong> may be requested to compute other things than Maxwell&#8217;s
+equations. That is the case, for example, for computing <a class="reference internal" href="collisions.html"><span class="doc">collisions</span></a> or ionization.
+In these situations, equations cannot be normalized to dimension-less terms, and
+the code must know the value of <span class="math">\(\omega_r\)</span> in physical units. This requires
+defining an <a class="reference internal" href="namelist.html#referenceangularfrequency-si"><span class="std std-ref">extra parameter in the namelist</span></a>.</p>
+<p>For instance, <code class="docutils literal"><span class="pre">referenceAngularFrequency_SI</span> <span class="pre">=</span> <span class="pre">2.*math.pi*3e8/1e-6</span></code> means that
+<span class="math">\(L_r = 1\,\mathrm{\mu m} /(2\pi)\)</span>.
+This information will be used only in some specific parts of the code (collisions, ionization, ...)
+but not in the main PIC algorithms.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The outputs of the code are not converted to SI.
+They are all kept in the reference units listed above.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Units</a><ul>
+<li><a class="reference internal" href="#basic-reference-quantities">Basic reference quantities</a></li>
+<li><a class="reference internal" href="#arbitrary-reference-quantities">Arbitrary reference quantities</a></li>
+<li><a class="reference internal" href="#tips-for-the-namelist">Tips for the namelist</a></li>
+<li><a class="reference internal" href="#problems-requiring-explicit-units">Problems requiring explicit units</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/units.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

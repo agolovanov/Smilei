@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PIC algorithms &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Parallelization basics" href="parallelization.html" />
+    <link rel="prev" title="Units" href="units.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="parallelization.html" title="Parallelization basics"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="units.html" title="Units"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pic-algorithms">
+<h1>PIC algorithms<a class="headerlink" href="#pic-algorithms" title="Permalink to this headline">¶</a></h1>
+<p>This document describes the theoretical basis with which <strong class="program">Smilei</strong> simulates
+the behaviour of plasmas. Note that all quantities are expressed in terms of the
+<a class="reference internal" href="units.html"><span class="doc">reference units</span></a>.</p>
+<hr class="docutils" />
+<div class="section" id="the-maxwell-vlasov-model">
+<h2>The Maxwell-Vlasov model<a class="headerlink" href="#the-maxwell-vlasov-model" title="Permalink to this headline">¶</a></h2>
+<p>The kinetic description of a collisionless plasma relies on the so-called Vlasov-Maxwell
+system of equations. In this description, the different species of particles constituting
+the plasma are described by their respective distribution functions
+<span class="math">\(f_s(t,\mathbf{x},\mathbf{p})\)</span>, where <span class="math">\(s\)</span> denotes a given species consisting
+of particles of charge <span class="math">\(q_s\)</span>, mass <span class="math">\(m_s\)</span>, and <span class="math">\(\mathbf{x}\)</span> and
+<span class="math">\(\mathbf{p}\)</span> denote the position and momentum of a phase-space element.
+The distribution <span class="math">\(f_s\)</span> satisfies Vlasov&#8217;s equation:</p>
+<div class="math" id="equation-Vlasov">
+<span class="eqno">(1)<a class="headerlink" href="#equation-Vlasov" title="Permalink to this equation">¶</a></span>\[\left(\partial_t + \frac{\mathbf{p}}{m_s \gamma} \cdot \nabla + \mathbf{F}_L \cdot \nabla_{\mathbf{p}} \right) f_s = 0\,,\]</div>
+<p>where <span class="math">\(\gamma = \sqrt{1+\mathbf{p}^2/m_s^2}\)</span> is the (relativistic) Lorentz factor,</p>
+<div class="math" id="equation-LorentzForce">
+<span class="eqno">(2)<a class="headerlink" href="#equation-LorentzForce" title="Permalink to this equation">¶</a></span>\[\mathbf{F}_L = q_s\,(\mathbf{E} + \mathbf{v} \times \mathbf{B})\]</div>
+<p>is the Lorentz force acting on the particles.
+This force follows from the existence, in the plasma, of collective (macroscopic)
+electric [<span class="math">\(\mathbf{E}(t,\mathbf{x})\)</span>] and magnetic [<span class="math">\(\mathbf{B}(t,\mathbf{x})\)</span>]
+fields satisfying Maxwell&#8217;s equations:</p>
+<div class="math" id="equation-Maxwell">
+<span class="eqno">(3)<a class="headerlink" href="#equation-Maxwell" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{eqnarray}
+\nabla \cdot \mathbf{B} &amp;=&amp; 0 \,,\\
+\nabla \cdot \mathbf{E} &amp;=&amp; \rho \,,\\
+\nabla \times \mathbf{B} &amp;=&amp; \mathbf{J} + \partial_t \mathbf{E} \,,\\
+\nabla \times \mathbf{E} &amp;=&amp; -\partial_t \mathbf{B} \,.
+\end{eqnarray}\end{split}\]</div>
+<p>The Vlasov-Maxwell system of equations <a class="reference internal" href="#equation-Vlasov">(1)</a>&#8211;<a class="reference internal" href="#equation-Maxwell">(3)</a> describes the
+self-consistent dynamics of the plasma which consistuents are subject to the Lorentz force,
+and in turn modify the collective electric and magnetic fields through their charge and
+current densities:</p>
+<div class="math" id="equation-rhoJ">
+<span class="eqno">(4)<a class="headerlink" href="#equation-rhoJ" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{eqnarray}
+\rho(t,\mathbf{x}) &amp;=&amp; \sum_s q_s\int\!d^3\!p f_s(t,\mathbf{x},\mathbf{p})\,,\\
+\mathbf{J}(t,\mathbf{x}) &amp;=&amp; \sum_s q_s\int\! d^3\!p\,\mathbf{v} f_s(t,\mathbf{x},\mathbf{p})\,,
+\end{eqnarray}\end{split}\]</div>
+<p>where we have introduced the velocity <span class="math">\(\mathbf{v} = \mathbf{p}/(m_s\,\gamma)\)</span>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="quasi-particles">
+<h2>Quasi-particles<a class="headerlink" href="#quasi-particles" title="Permalink to this headline">¶</a></h2>
+<p>The <em>Particle-In-Cell</em> method owes its name to the discretization of the distribution
+function <span class="math">\(f_s\)</span> as a sum of <span class="math">\(N_s\)</span> <em>quasi-particles</em> (also referred to as
+<em>super-particles</em> or <em>macro-particles</em>):</p>
+<div class="math" id="equation-fs_discretized">
+<span class="eqno">(5)<a class="headerlink" href="#equation-fs_discretized" title="Permalink to this equation">¶</a></span>\[f_s(t,\mathbf{x},\mathbf{p}) =
+  \sum_{p=1}^{N_s}\,w_p\,\,S\big(\mathbf{x}-\mathbf{x}_p(t)\big)\,\delta\big(\mathbf{p}-\mathbf{p}_p(t)\big)\,,\]</div>
+<p>where <span class="math">\(w_p\)</span> is a quasi-particle <em>weight</em>, <span class="math">\(\mathbf{x}_p\)</span> is its position,
+<span class="math">\(\mathbf{p}_p\)</span> is its momentum, <span class="math">\(S\)</span> is the shape-function of all quasi-particles,
+and <span class="math">\(\delta\)</span> is the Dirac distribution.</p>
+<p>In PIC codes, Vlasov&#8217;s equation <a class="reference internal" href="#equation-Vlasov">(1)</a> is integrated along the continuous trajectories
+of these quasi-particles, while Maxwell&#8217;s equations <a class="reference internal" href="#equation-Maxwell">(3)</a> are solved on a
+discrete spatial grid, the spaces between consecutive grid points being referred to as
+<em>cells</em>. Injecting the discrete distribution function of
+Eq. <a class="reference internal" href="#equation-fs_discretized">(5)</a> in Vlasov&#8217;s equation <a class="reference internal" href="#equation-Vlasov">(1)</a>, multiplying the result by
+<span class="math">\(\mathbf{p}\)</span> and integrating over all <span class="math">\(\mathbf{p}\)</span> and over the volume of
+the quasi-particles, leads to the relativistic equations of motion of individual
+quasi-particles:</p>
+<div class="math">
+\[\begin{split}\begin{eqnarray}
+\frac{d\mathbf{x}_p}{dt} &amp;=&amp; \frac{\mathbf{u}_p}{\gamma_p}\,\\
+\frac{d\mathbf{u}_p}{dt} &amp;=&amp; r_s \, \left( \mathbf{E}_p + \frac{\mathbf{u}_p}{\gamma_p} \times \mathbf{B}_p \right),
+\end{eqnarray}\end{split}\]</div>
+<p>where <span class="math">\(r_s = q_s/m_s\)</span> is the charge-over-mass ratio (for species <span class="math">\(s\)</span>),
+<span class="math">\(\mathbf{u}_p = \mathbf{p}_p/m_s\)</span> is the reduced momentum and
+<span class="math">\(\gamma_p=\sqrt{1+\mathbf{u}_p^2}\)</span> is the Lorentz factor.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="time-and-space-discretization">
+<h2>Time and space discretization<a class="headerlink" href="#time-and-space-discretization" title="Permalink to this headline">¶</a></h2>
+<p>Maxwell&#8217;s equations are solved here using the so-called Finite Difference Time Domain (FDTD)
+approach <a class="reference internal" href="material.html#taflovehagness" id="id1">[TafloveHagness]</a> as well as refined methods based on this algorithm
+(for a review of these methods see <a class="reference internal" href="material.html#nuter2014" id="id2">[Nuter2014]</a>). In these methods, the electromagnetic
+fields are discretized onto a staggered grid, the so-called Yee-grid that allows for
+spatial-centering of the discretized curl operators in Maxwell&#8217;s equations.
+The followingfigure summarizes at which points of the Yee-grid are defined the
+electromagnetic fields as well as charge and density currents.</p>
+<a class="reference internal image-reference" href="_images/figYee.png"><img alt="_images/figYee.png" src="_images/figYee.png" style="width: 13cm;" /></a>
+<p>Similarly, the time-centering
+of the time-derivative in Maxwell&#8217;s equations is ensured by considering the electric fields
+as defined at integer time-steps <span class="math">\((n)\)</span> and magnetic fields at half-integer
+time-steps <span class="math">\((n+\tfrac{1}{2})\)</span>. Time-centering of the magnetic fields is however
+necessary for diagnostic purposes, and most importantly when computing the Lorentz force
+acting on the quasi-particles.</p>
+<p>A <em>leap-frog</em> scheme is used to advance the particles in time, so that the particle positions
+and velocities are defined at integer <span class="math">\((n)\)</span> and half-integer <span class="math">\((n-\tfrac{1}{2})\)</span>
+time-steps, respectively.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="initialization-of-the-simulation">
+<h2>Initialization of the simulation<a class="headerlink" href="#initialization-of-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>The initialization of a PIC simulation is a three-step process consisting in</p>
+<ol class="arabic simple">
+<li>loading particles,</li>
+<li>computing the initial total charge and current densities on the grid,</li>
+<li>computing the initial electric and magnetic field at the grid points.</li>
+</ol>
+<p>In <strong class="program">Smilei</strong>, all three steps can be done either as a restart of a previous simulation
+(in which case the particles, charge and current densities and electromagnetic fields are
+directly copied from a file generated at the end of a previous simulation), or from a
+user-defined input file. In that case, the user defines the initial conditions of the
+particle, charge and current densities as well as the initial electromagnetic fields
+over the whole simulation domain.</p>
+<p>In particular, the number density <span class="math">\(n_s(\mathbf{x})\)</span>, mean velocity
+<span class="math">\(\mathbf{v}_s(\mathbf{x})\)</span> and temperature <span class="math">\(T_s(\mathbf{x})\)</span> of all species
+<span class="math">\(s\)</span> in a given cell (located at position <span class="math">\(\mathbf{x}\)</span>) at time <span class="math">\(t=0\)</span>
+have to be prescribed. The particle loading then consists in creating, in each cell,
+<span class="math">\(N_s\)</span> particles with positions <span class="math">\(\mathbf{x}_p\)</span> (either randomly chosen or
+regularly spaced) such that particles are uniformly distributed within the cell,
+and momentum <span class="math">\(\mathbf{p}_p\)</span> randomly chosen such that the particle distribution
+follows a Maxwell-Jüttner distribution with mean-velocity <span class="math">\(\mathbf{v}_s(\mathbf{x})\)</span>
+and temperature <span class="math">\(T_s(\mathbf{x})\)</span>.</p>
+<p>In <strong class="program">Smilei</strong>, a weight is assigned to each particle depending on the density associated
+to the cell it originates from:</p>
+<div class="math">
+\[w_p = \frac{n_s\big(\mathbf{x}_p(t=0)\big)}{N_s}\,.\]</div>
+<p>This variable weighting is particularly beneficial when considering initially
+highly-inhomogeneous density distributions.</p>
+<p>Once all particles in the simulation domain have been created, the total charge and
+current densities <span class="math">\(\rho(t=0,\mathbf{x})\)</span> and <span class="math">\(\mathbf{J}(t=0,\mathbf{x})\)</span>
+are computed on the grid using a simple projection technique:</p>
+<div class="math">
+\[\rho(t=0,\mathbf{x}) = \sum_s\,q_s\,\sum_p\,w_p\,S\big(\mathbf{x}-\mathbf{x}_p(t=0)\big)\,.\]</div>
+<p>Then, the initial electric fields are computed from <span class="math">\(\rho(t=0,\mathbf{x})\)</span>
+by solving Poisson&#8217;s equation. In <strong class="program">Smilei</strong>, this is done using the conjugate gradient
+method <span class="xref std std-ref">ConjugateGradient</span>. This iterative method is particularly interesting
+as it is easily implemented on massively parallel computers and requires mainly
+local information exchange between adjacent processes.</p>
+<p>External (divergence-free) electric and/or magnetic fields can then be added to the
+resulting electrostatic fields, provided they fullfill Maxwell&#8217;s equations <a class="reference internal" href="#equation-Maxwell">(3)</a>,
+and in particular Gauss&#8217; and Poisson&#8217;s.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="the-pic-loop">
+<h2>The PIC loop<a class="headerlink" href="#the-pic-loop" title="Permalink to this headline">¶</a></h2>
+<p>At the end of the initialization stage [time-step <span class="math">\((n=0)\)</span>], all quasi-particles
+in the simulation have been loaded and the electromagnetic fields have been computed
+over the whole simulation grid. The PIC loop is then started over <span class="math">\(N\)</span> time-steps
+each consisting in</p>
+<ol class="arabic simple">
+<li>interpolating the electromagnetic fields at the particle positions,</li>
+<li>computing the new particle velocities and positions,</li>
+<li>projecting the new charge and current densities on the grid,</li>
+<li>computing the new electromagnetic fields on the grid.</li>
+</ol>
+<p>In this section, we describe these four steps which advance the time from
+time-step <span class="math">\((n)\)</span> to time-step <span class="math">\((n+1)\)</span>.</p>
+<div class="section" id="field-interpolation">
+<h3>Field interpolation<a class="headerlink" href="#field-interpolation" title="Permalink to this headline">¶</a></h3>
+<p>At the beginning of time-step <span class="math">\((n)\)</span>, the particles velocity and position are known
+at time-step <span class="math">\((n-\tfrac{1}{2})\)</span> and <span class="math">\((n)\)</span>, respectively. For each particle
+<span class="math">\(p\)</span>, the electromagnetic fields [at time-step <span class="math">\((n)\)</span>] are computed at the
+particle position using a simple interpolation technique:</p>
+<div class="math">
+\[\begin{split}\begin{eqnarray}
+\mathbf{E}_p^{(n)} = V_c^{-1} \int d\mathbf{x}\, S\left(\mathbf{x}-\mathbf{x}_p^{(n)}\right) \mathbf{E}^{(n)}(\mathbf{x})\,,\\
+\mathbf{B}_p^{(n)} = V_c^{-1} \int d\mathbf{x}\, S\left(\mathbf{x}-\mathbf{x}_p^{(n)}\right) \mathbf{B}^{(n)}(\mathbf{x})\,,
+\end{eqnarray}\end{split}\]</div>
+<p>where we have used the time-centered magnetic fields
+<span class="math">\(\mathbf{B}^{(n)}=\tfrac{1}{2}[\mathbf{B}^{(n+1/2) } + \mathbf{B}^{(n-1/2)}]\)</span>,
+and <span class="math">\(V_c\)</span> denotes the volume of a cell.</p>
+</div>
+<div class="section" id="particle-push">
+<h3>Particle push<a class="headerlink" href="#particle-push" title="Permalink to this headline">¶</a></h3>
+<p>Knowing, for each quasi-particle, the electromagnetic fields at its position, the new
+particle momentum and position are computed using a (second order) leap-frog integrator.
+In <strong class="program">Smilei</strong>, two different schemes have been implemented: the well-known Boris
+pushe <a class="reference internal" href="material.html#boris1970" id="id3">[Boris1970]</a> and the pusher developed by J.-L. Vay <a class="reference internal" href="material.html#vay2008" id="id4">[Vay2008]</a>.
+Both schemes compute the new particle momentum and position according to</p>
+<div class="math">
+\[\mathbf{u}_p^{n+\tfrac{1}{2}}=\mathbf{v}_p^{n-\tfrac{1}{2}} + r_s \Delta t \, \left[ E_p^{(n)} + \frac{\mathbf{v}_p^{(n+\tfrac{1}{2})}+\mathbf{v}_p^{(n-\tfrac{1}{2})}}{2} \times B_p^{(n)}\right],\]</div>
+<div class="math">
+\[\mathbf{x}_p^{n+1}=\mathbf{x}_p^{n} + \Delta t \, \frac{\mathbf{u}_p^{n+\tfrac{1}{2}}}{\gamma_p},\]</div>
+<p>where <span class="math">\(\Delta t\)</span> denotes the duration of a time-step.</p>
+</div>
+<div class="section" id="current-deposition">
+<h3>Current deposition<a class="headerlink" href="#current-deposition" title="Permalink to this headline">¶</a></h3>
+<p>Charge deposition (i.e. charge and current density projection onto the grid) is then
+performed using the charge-conserving algorithm proposed by Esirkepov <a class="reference internal" href="material.html#esirkepov2001" id="id5">[Esirkepov2001]</a>.
+The current densities along the dimensions of the grid
+(i.e., the <span class="math">\(x\)</span>-direction for 1D3V simulations,
+both <span class="math">\(x\)</span>- and <span class="math">\(y\)</span>-directions for 2D3V simulations,
+and all three <span class="math">\(x\)</span>-, <span class="math">\(y\)</span>- and <span class="math">\(z\)</span>-directions for 3D3V simulations)
+are computed from the charge flux through the cell borders
+(hence ensuring charge conservation) while the current densities along the other
+dimensions are performed using a simple projection.</p>
+<p>To illustrate this point, we take the example of current deposition in a 2D3V simulation.
+The current densities in the <span class="math">\(x\)</span>- and <span class="math">\(y\)</span>-directions associated to a particle
+with charge <span class="math">\(q\)</span> are computed as:</p>
+<div class="math">
+\[\begin{split}\begin{eqnarray}
+(J_x)_{i+\tfrac{1}{2},j}^{(n+\tfrac{1}{2})} = (J_x)_{i-\tfrac{1}{2},j}^{(n+\tfrac{1}{2})} + q\,w_p\,\frac{\Delta x}{\Delta t}\,(W_x)_{i+\tfrac{1}{2},j}^{(n+\tfrac{1}{2})}\,\\
+(J_y)_{i,j+\tfrac{1}{2}}^{(n+\tfrac{1}{2})} = (J_y)_{i,j-\tfrac{1}{2}}^{(n+\tfrac{1}{2})} + q\,w_p\,\frac{\Delta y}{\Delta t}\,(W_y)_{j,i+\tfrac{1}{2}}^{(n+\tfrac{1}{2})}\,
+\end{eqnarray}\end{split}\]</div>
+<p>where <span class="math">\((W_x)^{(n+\tfrac{1}{2})}\)</span> and <span class="math">\((W_y)^{(n+\tfrac{1}{2})}\)</span> are computed
+from the particle current and former positions <span class="math">\(x_p^{(n+1)}\)</span> and <span class="math">\(x_p^{(n)}\)</span>,
+respectively, using the method developed by Esirkepov.
+The particle current in the <span class="math">\(z\)</span>-direction (not a dimension of the grid) is,
+in this geometry, computed using a simple projection:</p>
+<div class="math">
+\[(J_z)_{i,j} = q w_r \mathbf{v}_p\,S(\mathbf{x}_{i,j}-\mathbf{x}_p)\,.\]</div>
+<p>In all cases, the charge density deposited by the particle is obtained using the simple
+projection:</p>
+<div class="math">
+\[(\rho)_{i,j}^{(n+1)} = q\,w_p\,S(\mathbf{x}_{i,j}-\mathbf{x}_p^{(n+1)})\,.\]</div>
+<p>The total charge and current densities henceforth gather the contributions of all
+quasi-particles of all species. It is worth noting that, within a charge-conserving
+framework, charge densities are only projected on the grid for diagnostics purposes
+(as we will see in the next paragraph, it is not used to advance the electromagnetic fields).</p>
+</div>
+<div class="section" id="maxwell-solvers">
+<h3>Maxwell solvers<a class="headerlink" href="#maxwell-solvers" title="Permalink to this headline">¶</a></h3>
+<p>Now that the currents are known at time-step <span class="math">\(n+\tfrac{1}{2}\)</span>, the electromagnetic
+fields can be advanced solving Maxwell&#8217;s equations <a class="reference internal" href="#equation-Maxwell">(3)</a>.</p>
+<p>First, Maxwell-Ampère is solved, giving the advanced electric fields</p>
+<div class="math">
+\[\mathbf{E}^{(n+1)} = \mathbf{E}^{(n)} + \Delta t\, \left[\left(\nabla \times \mathbf{B}\right)^{(n+\tfrac{1}{2})} - \mathbf{J}^{(n+\tfrac{1}{2})} \right]\,.\]</div>
+<p>Then, Maxwell-Faraday is computed, leading to the advanced magnetic fields</p>
+<div class="math">
+\[\mathbf{B}^{(n+\tfrac{3}{2})} = \mathbf{B}^{(n+\tfrac{1}{2})} - \Delta t\, \left(\nabla \times \mathbf{E}\right)^{(n+1)}\,.\]</div>
+<p>The discretization of the curl-operator is not detailed here.</p>
+<p>It is worth
+noting that computing the two previous equations is sufficient to get a complete description
+of the new electromagnetic fields. Indeed, it can be shown that this conserves a
+divergence-free magnetic field if Gauss&#8217; equation is satisfied at time <span class="math">\(t=0\)</span>.
+Similarly, Poisson&#8217;s equation is verified as long as it is satisfied
+at time <span class="math">\(t=0\)</span>, if the charge deposition algorithm fulfills the charge conservation
+equation:</p>
+<div class="math">
+\[\partial_t \rho + \nabla \cdot \mathbf{J} = 0\]</div>
+<p>(this motivated the use of Esirkepov&#8217;s projection scheme discussed in the previous paragraph).</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="boundary-conditions">
+<h2>Boundary conditions<a class="headerlink" href="#boundary-conditions" title="Permalink to this headline">¶</a></h2>
+<p>After new quasi-particle positions and velocities have been computed, boundary conditions (BCs)
+are applied to each quasi-particle that may be located in a ghost cell,
+i.e. outside of the &#8216;real&#8217; grid.
+Quasi-particle species may have a different BC for each boundary of the simulation box:
+the quasi-particles can either loop around the box (periodic),
+be stopped (momentum set to zero),
+suppressed (removed from memory),
+reflected (momentum and position follow specular reflection rules)
+or thermalized.
+In the latter case, the quasi-particle is set back inside the simulation box,
+and its new momentum is randomly sampled in a Maxwellian distribution
+with a given temperature and drift velocity, both specified by the user.</p>
+<p>BCs are applied to the electromagnetic fields after Maxwell&#8217;s equations have been solved.
+Each boundary of the simulation box can feature a different BC.
+First, injecting/absorbing BCs inspired from the Silver-Müller BC
+are able to inject an electromagnetic wave (e.g. a laser) and/or
+to absorb outgoing electromagnetic waves.
+In contrast, the reflective electromagnetic BC will reflect any outgoing
+electromagnetic wave reaching the simulation boundary.
+Lastly, periodic BCs correspond to applying the fields from the opposite boundary.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">PIC algorithms</a><ul>
+<li><a class="reference internal" href="#the-maxwell-vlasov-model">The Maxwell-Vlasov model</a></li>
+<li><a class="reference internal" href="#quasi-particles">Quasi-particles</a></li>
+<li><a class="reference internal" href="#time-and-space-discretization">Time and space discretization</a></li>
+<li><a class="reference internal" href="#initialization-of-the-simulation">Initialization of the simulation</a></li>
+<li><a class="reference internal" href="#the-pic-loop">The PIC loop</a><ul>
+<li><a class="reference internal" href="#field-interpolation">Field interpolation</a></li>
+<li><a class="reference internal" href="#particle-push">Particle push</a></li>
+<li><a class="reference internal" href="#current-deposition">Current deposition</a></li>
+<li><a class="reference internal" href="#maxwell-solvers">Maxwell solvers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#boundary-conditions">Boundary conditions</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/algorithms.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

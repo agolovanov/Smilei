@@ -1,0 +1,1258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Post-process &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Material" href="material.html" />
+    <link rel="prev" title="Run" href="run.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="material.html" title="Material"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="run.html" title="Run"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="post-process">
+<h1>Post-process<a class="headerlink" href="#post-process" title="Permalink to this headline">¶</a></h1>
+<p>A python module is provided to view or extract data from all the diagnostics.
+There are several ways to load this module in python.</p>
+<p class="rubric">Recommended: Install Smilei&#8217;s module</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">install_python</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This has to be done only once, unless you move the smilei directory elsewere. This command creates a small file in the Python user-site directory. To remove it use the command: <code class="docutils literal"><span class="pre">make</span> <span class="pre">uninstall_python</span></code>.</p>
+</div>
+<p>Then, in python, simply run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Smilei</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p class="rubric">Alternative: Execute the <code class="docutils literal"><span class="pre">Diagnostics.py</span></code> script from python</p>
+<blockquote>
+<div><p>You can add the following command in your own python script:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">execfile</span><span class="p">(</span><span class="s2">&quot;/path/to/Smilei/scripts/Diagnostics.py&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This solution is kept for backward compatibility and may be removed in
+a future release</p>
+</div>
+</div></blockquote>
+<hr class="docutils" />
+<div class="section" id="open-a-simulation">
+<h2>Open a simulation<a class="headerlink" href="#open-a-simulation" title="Permalink to this headline">¶</a></h2>
+<p>In a <em>python</em> command line (or script), invoke the following class to open
+your <strong class="program">Smilei</strong> simulation. Note that several simulations can be opened at once,
+as long as they correspond to several <a class="reference internal" href="namelist.html#checkpoints"><span class="std std-ref">restarts</span></a> of the same simulation.</p>
+<dl class="class">
+<dt id="Smilei">
+<em class="property">class </em><code class="descname">Smilei</code><span class="sig-paren">(</span><em>results_path</em>, <em>show=True</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">results_path</span></code>: string or list of strings (default: <code class="docutils literal"><span class="pre">'.'</span></code>)</dt>
+<dd><div class="first last line-block">
+<div class="line">Path or list of paths to the directory-ies where the results of the simulation-s are stored. It can also contain wildcards, such as <code class="docutils literal"><span class="pre">*</span></code> and <code class="docutils literal"><span class="pre">?</span></code> in order to include several simulations at once.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">show</span></code>: boolean (default: <code class="docutils literal"><span class="pre">True</span></code>)</dt>
+<dd><div class="first last line-block">
+<div class="line">Toggles whether the figures will actually plot on screen.</div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once a simulation is opened, several methods are available to find information on the
+namelist or open various diagnostics. Checkout the namelist documentation to find out
+which diagnostics are included in Smilei: <a class="reference internal" href="namelist.html#diagscalar"><span class="std std-ref">scalars</span></a>,
+<a class="reference internal" href="namelist.html#diagfields"><span class="std std-ref">fields</span></a>, <a class="reference internal" href="namelist.html#diagprobe"><span class="std std-ref">probes</span></a> and <a class="reference internal" href="namelist.html#diagparticles"><span class="std std-ref">particles</span></a>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="extract-namelist-information">
+<h2>Extract namelist information<a class="headerlink" href="#extract-namelist-information" title="Permalink to this headline">¶</a></h2>
+<p>Once a simulation is opened as shown above, you can access the content of the namelist
+using the variable <code class="docutils literal"><span class="pre">namelist</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span> <span class="c1"># Open a simulation</span>
+<span class="nb">print</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">Main</span><span class="o">.</span><span class="n">timestep</span>   <span class="c1"># print the timestep</span>
+<span class="nb">print</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">Main</span><span class="o">.</span><span class="n">geometry</span>   <span class="c1"># print the simulation dimensions</span>
+</pre></div>
+</div>
+<p>All the variables defined in the original namelist are copied into this variable.</p>
+<p>Concerning components like <a class="reference internal" href="namelist.html#species"><span class="std std-ref">Species</span></a>, <a class="reference internal" href="namelist.html#extfield"><span class="std std-ref">External fields</span></a> or <a class="reference internal" href="namelist.html#diagprobe"><span class="std std-ref">Probe diagnostics</span></a>, of which
+several instances may exist, you can directly iterate over them:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">Species</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s2">&quot;species &quot;</span><span class="o">+</span><span class="n">species</span><span class="o">.</span><span class="n">species_type</span><span class="o">+</span><span class="s2">&quot; has mass &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also access to a specific component by referencing its number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ExtField</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># get the first external field</span>
+<span class="nb">print</span> <span class="s2">&quot;An external field &quot;</span><span class="o">+</span><span class="n">F</span><span class="o">.</span><span class="n">field</span><span class="o">+</span><span class="s2">&quot; was applied&quot;</span>
+</pre></div>
+</div>
+<p>In the case of the species, you can also obtain a given species by its name (or
+<code class="docutils literal"><span class="pre">species_type</span></code>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">species</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">Species</span><span class="p">[</span><span class="s2">&quot;electron1&quot;</span><span class="p">]</span>
+<span class="nb">print</span> <span class="s2">&quot;species &quot;</span><span class="o">+</span><span class="n">species</span><span class="o">.</span><span class="n">species_type</span><span class="o">+</span><span class="s2">&quot; has mass &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-scalar-diagnostic">
+<h2>Open a Scalar diagnostic<a class="headerlink" href="#open-a-scalar-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Scalar">
+<code class="descclassname">Smilei.</code><code class="descname">Scalar</code><span class="sig-paren">(</span><em>scalar=None, timesteps=None, units=[&quot;&quot;], data_log=False, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">scalar</span></code>: The name of the scalar.</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, then a list of available scalars is printed.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">timesteps</span></code>: The requested timestep(s).</dt>
+<dd><div class="first last line-block">
+<div class="line">If omitted, all timesteps are used.</div>
+<div class="line">If one number  given, the nearest timestep available is used.</div>
+<div class="line">If two numbers given, all the timesteps in between are used.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">units</span></code>: A unit specification (see <a class="reference internal" href="#units"><span class="std std-ref">Specifying units</span></a>)</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">data_log</span></code>:</dt>
+<dd><div class="first last line-block">
+<div class="line">If <code class="docutils literal"><span class="pre">True</span></code>, then <span class="math">\(\log_{10}\)</span> is applied to the output.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">Scalar</span><span class="p">(</span><span class="s2">&quot;Utot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-field-diagnostic">
+<h2>Open a Field diagnostic<a class="headerlink" href="#open-a-field-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Field">
+<code class="descclassname">Smilei.</code><code class="descname">Field</code><span class="sig-paren">(</span><em>diagNumber=None, field=None, timesteps=None, slice=None, units=[&quot;&quot;], data_log=False, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">timesteps</span></code>, <code class="docutils literal"><span class="pre">units</span></code>, <code class="docutils literal"><span class="pre">data_log</span></code>: same as before.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">diagNumber</span></code>: The number of the fields diagnostic</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, then a list of available diagnostic numbers is printed.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">field</span></code>: The name of a field (<code class="docutils literal"><span class="pre">&quot;Ex&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ey&quot;</span></code>, etc.)</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, then a list of available fields is printed.</div>
+<div class="line">The string can also be an operation between several fields, such as <code class="docutils literal"><span class="pre">&quot;Jx+Jy&quot;</span></code>.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">slice</span></code>: A selection of rows or columns. This parameter is used to reduce the number of dimensions of the array.</dt>
+<dd><div class="first last line-block">
+<div class="line">Syntax 1: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">&quot;all&quot;,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+<div class="line">Syntax 2: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">location,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+<div class="line">Syntax 3: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">[begin,</span> <span class="pre">end]</span> <span class="pre">,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+<div class="line"><code class="docutils literal"><span class="pre">axis</span></code> must be <code class="docutils literal"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;y&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;z&quot;</span></code>.</div>
+<div class="line">The chosen axes will be removed:</div>
+<div class="line">- With syntax 1, an average is performed over all the axis.</div>
+<div class="line">- With syntax 2, only the bin closest to <code class="docutils literal"><span class="pre">location</span></code> is kept.</div>
+<div class="line">- With syntax 3, an average is performed between <code class="docutils literal"><span class="pre">begin</span></code> and <code class="docutils literal"><span class="pre">end</span></code>.</div>
+<div class="line">Example: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{&quot;x&quot;:[4,5]}</span></code> will average for <span class="math">\(x\)</span> within [4,5].</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">stride</span></code>: step size for reading the grid. If the grid is too large, use a stride &gt; 1
+to reduce the amount of data.</p>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Ex&quot;</span><span class="p">,</span> <span class="nb">slice</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-probe-diagnostic">
+<h2>Open a Probe diagnostic<a class="headerlink" href="#open-a-probe-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Probe">
+<code class="descclassname">Smilei.</code><code class="descname">Probe</code><span class="sig-paren">(</span><em>probeNumber=None, field=None, timesteps=None, slice=None, units=[&quot;&quot;], data_log=False, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">timesteps</span></code>, <code class="docutils literal"><span class="pre">units</span></code>, <code class="docutils literal"><span class="pre">data_log</span></code>: same as before.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">probeNumber</span></code>: number of the probe (the first one has number 0).</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, a list of available probes is printed.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">field</span></code>: name of the field (<code class="docutils literal"><span class="pre">&quot;Bx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;By&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Bz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ex&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ey&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Ez&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jy&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;Jz&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;Rho&quot;</span></code>).</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, then a list of available fields is printed.</div>
+<div class="line">The string can also be an operation between several fields, such as <code class="docutils literal"><span class="pre">&quot;Jx+Jy&quot;</span></code>.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">slice</span></code> is very similar to that of <a class="reference internal" href="#Smilei.Field" title="Smilei.Field"><code class="xref py py-meth docutils literal"><span class="pre">Field()</span></code></a>, but it can only accept two axes: <code class="docutils literal"><span class="pre">&quot;axis1&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;axis2&quot;</span></code>.</dt>
+<dd><div class="first last line-block">
+<div class="line">For instance, <code class="docutils literal"><span class="pre">slice={&quot;axis1&quot;:&quot;all&quot;}</span></code>. Note that <code class="docutils literal"><span class="pre">&quot;axis1&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;axis2&quot;</span></code> are not necessarily <span class="math">\(x\)</span> or <span class="math">\(y\)</span> because the probe mesh may be rotated.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">Probe</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Ex&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-particle-diagnostic">
+<h2>Open a Particle diagnostic<a class="headerlink" href="#open-a-particle-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.ParticleDiagnostic">
+<code class="descclassname">Smilei.</code><code class="descname">ParticleDiagnostic</code><span class="sig-paren">(</span><em>diagNumber=None, timesteps=None, slice=None, units=[&quot;&quot;], data_log=False, stride=1, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">timesteps</span></code>, <code class="docutils literal"><span class="pre">units</span></code>, <code class="docutils literal"><span class="pre">data_log</span></code>: same as before.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">diagNumber</span></code>: number of the particle diagnostic (the first one has number 0).</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, a list of available particle diagnostics is printed.</div>
+<div class="line">It can also be an operation between several particle diagnostics.</div>
+<div class="line">For example, <code class="docutils literal"><span class="pre">&quot;#0/#1&quot;</span></code> computes the division by diagnostics 0 and 1.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">slice</span></code>: a selection of rows or columns. This parameter is used to reduce the number of dimensions of the array.</dt>
+<dd><div class="first line-block">
+<div class="line">Syntax 1: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">&quot;all&quot;,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+<div class="line">Syntax 2: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">location,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+<div class="line">Syntax 3: <code class="docutils literal"><span class="pre">slice</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">axis</span> <span class="pre">:</span> <span class="pre">[begin,</span> <span class="pre">end]</span> <span class="pre">,</span> <span class="pre">...</span> <span class="pre">}</span></code></div>
+</div>
+<p><code class="docutils literal"><span class="pre">axis</span></code> must be <code class="docutils literal"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;z&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;px&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;py&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;pz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;p&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;gamma&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;ekin&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vx&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vy&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;vz&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;v&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;charge&quot;</span></code>.</p>
+<div class="last line-block">
+<div class="line">The chosen axes will be removed:</div>
+<div class="line">- With syntax 1, a <strong>sum</strong> is performed over all the axis.</div>
+<div class="line">- With syntax 2, only the bin closest to <code class="docutils literal"><span class="pre">location</span></code> is kept.</div>
+<div class="line">- With syntax 3, a <strong>sum</strong> is performed between <code class="docutils literal"><span class="pre">begin</span></code> and <code class="docutils literal"><span class="pre">end</span></code>.</div>
+<div class="line">Example: <code class="docutils literal"><span class="pre">slice={&quot;x&quot;:[4,5]</span></code>} will sum all the data for x within [4,5].</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">stride</span></code>: step size for reading the grid. If the grid is too large, use a stride &gt; 1
+to reduce the amount of data.</p>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-screen-diagnostic">
+<h2>Open a Screen diagnostic<a class="headerlink" href="#open-a-screen-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Screen">
+<code class="descclassname">Smilei.</code><code class="descname">Screen</code><span class="sig-paren">(</span><em>diagNumber=None, timesteps=None, slice=None, units=[&quot;&quot;], data_log=False, stride=1, **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">timesteps</span></code>, <code class="docutils literal"><span class="pre">units</span></code>, <code class="docutils literal"><span class="pre">data_log</span></code>: same as before.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">diagNumber</span></code>: number of the screen diagnostic (the first one has number 0).</dt>
+<dd><div class="first last line-block">
+<div class="line">If not given, a list of available screen diagnostics is printed.</div>
+<div class="line">It can also be an operation between several screen diagnostics.</div>
+<div class="line">For example, <code class="docutils literal"><span class="pre">&quot;#0/#1&quot;</span></code> computes the division by diagnostics 0 and 1.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">slice</span></code>: identical to that of particle diagnostics.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">stride</span></code>: identical to that of particle diagnostics.</p>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">Screen</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="open-a-track-diagnostic">
+<h2>Open a Track diagnostic<a class="headerlink" href="#open-a-track-diagnostic" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.TrackParticles">
+<code class="descclassname">Smilei.</code><code class="descname">TrackParticles</code><span class="sig-paren">(</span><em>species=None, select=&quot;&quot;, axes=[], timesteps=None, length=None, units=[&quot;&quot;], **kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.TrackParticles" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">timesteps</span></code>, <code class="docutils literal"><span class="pre">units</span></code>: same as before.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">species</span></code>: the name of a tracked-particle species.</dt>
+<dd><div class="first last line-block">
+<div class="line">If omitted, a list of available tracked-particle species is printed.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">select</span></code>: Instructions for selecting particles among those available.
+A detailed explanation is provided below</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">axes</span></code>: A list of axes for plotting the trajectories.</dt>
+<dd><div class="first last line-block">
+<div class="line">Each axis is <code class="docutils literal"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;y&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;z&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;px&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;py&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;pz&quot;</span></code>.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">axes</span> <span class="pre">=</span> <span class="pre">[&quot;x&quot;]</span></code> corresponds to <span class="math">\(x\)</span> versus time.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">axes</span> <span class="pre">=</span> <span class="pre">[&quot;x&quot;,&quot;y&quot;]</span></code> correspond to 2-D trajectories.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">axes</span> <span class="pre">=</span> <span class="pre">[&quot;x&quot;,&quot;px&quot;]</span></code> correspond to phase-space trajectories.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">length</span></code>: The length of each plotted trajectory, in number of timesteps.</p>
+</li>
+<li><p class="first">Other keyword arguments (<code class="docutils literal"><span class="pre">kwargs</span></code>) are available, the same as the function <a class="reference internal" href="#plot" title="plot"><code class="xref py py-func docutils literal"><span class="pre">plot()</span></code></a>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">TrackParticles</span><span class="p">(</span><span class="s2">&quot;electrons&quot;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;px&quot;</span><span class="p">,</span><span class="s2">&quot;py&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>Detailed explanation of the</strong> <code class="docutils literal"><span class="pre">select</span></code> <strong>parameter</strong></p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>Syntax 1:</strong> <code class="docutils literal"><span class="pre">select=&quot;any(times,</span> <span class="pre">condition)&quot;</span></code></div>
+<div class="line"><strong>Syntax 2:</strong> <code class="docutils literal"><span class="pre">select=&quot;all(times,</span> <span class="pre">condition)&quot;</span></code></div>
+<div class="line"><code class="docutils literal"><span class="pre">times</span></code> is a selection of timesteps <code class="docutils literal"><span class="pre">t</span></code>, for instance <code class="docutils literal"><span class="pre">t&gt;50</span></code>.</div>
+<div class="line"><code class="docutils literal"><span class="pre">condition</span></code> is a condition on particles properties  (<code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">y</span></code>, <code class="docutils literal"><span class="pre">z</span></code>, <code class="docutils literal"><span class="pre">px</span></code>, <code class="docutils literal"><span class="pre">py</span></code>, <code class="docutils literal"><span class="pre">pz</span></code>), for instance <code class="docutils literal"><span class="pre">px&gt;0</span></code>.</div>
+<div class="line">Syntax 1 selects particles satisfying <code class="docutils literal"><span class="pre">condition</span></code> for at least one of the <code class="docutils literal"><span class="pre">times</span></code>.</div>
+<div class="line">Syntax 2 selects particles satisfying <code class="docutils literal"><span class="pre">condition</span></code> at all <code class="docutils literal"><span class="pre">times</span></code>.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">select=&quot;all(t&lt;40,</span> <span class="pre">px&lt;0.1)&quot;</span></code> selects particles that kept <span class="math">\(p_x&lt;0.1\)</span> until timestep 40.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">select=&quot;any(t&gt;0,</span> <span class="pre">px&gt;1.)&quot;</span></code> selects particles that reached <span class="math">\(p_x&gt;1\)</span> at some point.</div>
+<div class="line">It is possible to make logical operations: <code class="docutils literal"><span class="pre">+</span></code> is <em>OR</em>; <code class="docutils literal"><span class="pre">*</span></code> is <em>AND</em>; <code class="docutils literal"><span class="pre">-</span></code> is <em>NOT</em>.</div>
+<div class="line"><strong>Example:</strong> <code class="docutils literal"><span class="pre">select=&quot;any((t&gt;30)*(t&lt;60),</span> <span class="pre">px&gt;1)</span> <span class="pre">+</span> <span class="pre">all(t&gt;0,</span> <span class="pre">(x&gt;1)*(x&lt;2))&quot;</span></code></div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Syntax 3:</strong> <code class="docutils literal"><span class="pre">select=selection</span></code> where <code class="docutils literal"><span class="pre">selection</span></code> is a list of particle IDs to be selected.</div>
+<div class="line">The selection can be obtained from a previous diagnostic using:</div>
+<div class="line"><code class="docutils literal"><span class="pre">Smilei.TrackParticles(</span> <span class="pre">...</span> <span class="pre">).selectedParticles</span></code></div>
+</div>
+</div></blockquote>
+<hr class="docutils" />
+</div>
+<div class="section" id="specifying-units">
+<span id="units"></span><h2>Specifying units<a class="headerlink" href="#specifying-units" title="Permalink to this headline">¶</a></h2>
+<p>By default, all the diagnostics data is in code units (see <a class="reference internal" href="units.html"><span class="doc">Units</span></a>).</p>
+<p>To change the units, all the methods <code class="xref py py-meth docutils literal"><span class="pre">Scalar()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">Field()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">Probe()</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">ParticleDiagnostic()</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">TrackParticles()</span></code> support a <code class="docutils literal"><span class="pre">units</span></code> argument.
+It has three different syntaxes:</p>
+<ol class="arabic">
+<li><p class="first"><strong>A list</strong>, for example <code class="docutils literal"><span class="pre">units</span> <span class="pre">=</span> <span class="pre">[&quot;um/ns&quot;,</span> <span class="pre">&quot;feet&quot;,</span> <span class="pre">&quot;W/cm^2&quot;]</span></code></p>
+<p>In this case, any quantity found to be of the same dimension as one of these units
+will be converted.</p>
+</li>
+<li><p class="first"><strong>A dictionary</strong>, for example <code class="docutils literal"><span class="pre">units</span> <span class="pre">=</span> <span class="pre">{&quot;x&quot;:&quot;um&quot;,</span> <span class="pre">&quot;y&quot;:&quot;um&quot;,</span> <span class="pre">&quot;v&quot;:&quot;Joule&quot;}</span></code></p>
+<p>In this case, we specify the units separately for axes <code class="docutils literal"><span class="pre">x</span></code> and <code class="docutils literal"><span class="pre">y</span></code>, and for the
+data values <code class="docutils literal"><span class="pre">v</span></code>.</p>
+</li>
+<li><p class="first"><strong>A</strong> <code class="docutils literal"><span class="pre">Units</span></code> <strong>object</strong>, for example <code class="docutils literal"><span class="pre">units</span> <span class="pre">=</span> <span class="pre">Units(&quot;um/ns&quot;,</span> <span class="pre">&quot;feet&quot;,</span> <span class="pre">x=&quot;um&quot;)</span></code></p>
+<p>This version combines the two previous ones.</p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Changing units requires the <a class="reference external" href="https://pypi.python.org/pypi/Pint/">Pint module</a> .</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="obtain-the-data-as-an-array">
+<h2>Obtain the data as an array<a class="headerlink" href="#obtain-the-data-as-an-array" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Scalar.getData">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.getData" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.getData">
+<code class="descclassname">Smilei.Field.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.getData" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.getData">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.getData" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.getData">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.getData" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.getData">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the data arrays, for each timestep requested.
+By default, all timesteps are returned. If only one is desired, use the
+keyword-argument <code class="docutils literal"><span class="pre">timestep</span></code> in the <code class="docutils literal"><span class="pre">getData()</span></code> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Smilei.Scalar.get">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.get" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.get">
+<code class="descclassname">Smilei.Field.</code><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.get" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.get">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.get" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.get">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.get" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.get">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to <a class="reference internal" href="#Smilei.Screen.getData" title="Smilei.Screen.getData"><code class="xref py py-meth docutils literal"><span class="pre">getData()</span></code></a>, but returns more things as a python dictionary:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">get()[&quot;data&quot;]</span></code> is the same as <code class="docutils literal"><span class="pre">getData()</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">get()[&quot;times&quot;]</span></code> is a list of the requested timesteps.</li>
+<li><code class="docutils literal"><span class="pre">get()[myaxis]</span></code> gives the locations of the axis bins. For instance <code class="docutils literal"><span class="pre">get()[&quot;x&quot;]</span></code>.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">Diag</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="n">diagNumber</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ekin&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">]})</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Diag</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<blockquote>
+<div>This will take the particle diagnostic #3 and sum for all energies between 1 and 10.
+The results are stored in the variable <code class="docutils literal"><span class="pre">result</span></code>.
+The data can be accessed with <code class="docutils literal"><span class="pre">result[&quot;data&quot;]</span></code>.
+If one of the axes is <code class="docutils literal"><span class="pre">&quot;x&quot;</span></code>, you can access the locations of the bins with <code class="docutils literal"><span class="pre">result[&quot;x&quot;]</span></code>.</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="plot-the-data-at-one-timestep">
+<h2>Plot the data at one timestep<a class="headerlink" href="#plot-the-data-at-one-timestep" title="Permalink to this headline">¶</a></h2>
+<p>This is the first method to plot the data. It produces a static image of the data
+at one given timestep.</p>
+<dl class="method">
+<dt id="Smilei.Scalar.plot">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.plot">
+<code class="descclassname">Smilei.Field.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.plot">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.plot">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.TrackParticles.plot">
+<code class="descclassname">Smilei.TrackParticles.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.TrackParticles.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.plot">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>All these methods have the same arguments described below.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>figure=1</em>, <em>axes=None</em>, <em>vmin=None</em>, <em>vmax=None</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>xfactor=None</em>, <em>yfactor=None</em>, <em>saveAs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#plot" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">If the data is 1D, it is plotted as a <strong>curve</strong>.</div>
+<div class="line">If the data is 2D, it is plotted as a <strong>map</strong>.</div>
+<div class="line">If the data is 0D, it is plotted as a <strong>curve</strong> as function of time.</div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">figure</span></code>: The figure number that is passed to matplotlib.</li>
+<li><code class="docutils literal"><span class="pre">axes</span></code>: Matplotlib&#8217;s axes handle on which to plot. If None, make new axes.</li>
+<li><code class="docutils literal"><span class="pre">vmin</span></code>, <code class="docutils literal"><span class="pre">vmax</span></code>: data value limits.</li>
+<li><code class="docutils literal"><span class="pre">xmin</span></code>, <code class="docutils literal"><span class="pre">xmax</span></code>, <code class="docutils literal"><span class="pre">ymin</span></code>, <code class="docutils literal"><span class="pre">ymax</span></code>: axes limits.</li>
+<li><code class="docutils literal"><span class="pre">xfactor</span></code>, <code class="docutils literal"><span class="pre">yfactor</span></code>: factors to rescale axes.</li>
+<li><code class="docutils literal"><span class="pre">saveAs</span></code>: name of a directory where to save each frame as figures.
+You can even specify a filename such as <code class="docutils literal"><span class="pre">mydir/prefix.png</span></code> and it will automatically
+make successive files showing the timestep: <code class="docutils literal"><span class="pre">mydir/prefix0.png</span></code>, <code class="docutils literal"><span class="pre">mydir/prefix1.png</span></code>,
+etc.</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e14</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="plot-the-data-streaked-over-time">
+<h2>Plot the data streaked over time<a class="headerlink" href="#plot-the-data-streaked-over-time" title="Permalink to this headline">¶</a></h2>
+<p>This second type of plot works only for 1D data. All available timesteps
+are streaked to produce a 2D image where the second axis is time.</p>
+<dl class="method">
+<dt id="Smilei.Scalar.streak">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.streak" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.streak">
+<code class="descclassname">Smilei.Field.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.streak" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.streak">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.streak" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.streak">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.streak" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.TrackParticles.streak">
+<code class="descclassname">Smilei.TrackParticles.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.TrackParticles.streak" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.streak">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">streak</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.streak" title="Permalink to this definition">¶</a></dt>
+<dd><p>All these methods have the same arguments described below.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="streak">
+<code class="descname">streak</code><span class="sig-paren">(</span><em>figure=1</em>, <em>axes=None</em>, <em>vmin=None</em>, <em>vmax=None</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>xfactor=None</em>, <em>yfactor=None</em>, <em>saveAs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#streak" title="Permalink to this definition">¶</a></dt>
+<dd><p>All arguments are identical to those of <code class="docutils literal"><span class="pre">plot</span></code>.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">streak</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="animated-plot">
+<h2>Animated plot<a class="headerlink" href="#animated-plot" title="Permalink to this headline">¶</a></h2>
+<p>This third plotting method animates the data over time.</p>
+<dl class="method">
+<dt id="Smilei.Scalar.animate">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.animate">
+<code class="descclassname">Smilei.Field.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.animate">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.animate">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.TrackParticles.animate">
+<code class="descclassname">Smilei.TrackParticles.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.TrackParticles.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.animate">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">animate</code><span class="sig-paren">(</span><em>...</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>All these methods have the same arguments described below.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="animate">
+<code class="descname">animate</code><span class="sig-paren">(</span><em>figure=1</em>, <em>axes=None</em>, <em>vmin=None</em>, <em>vmax=None</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>xfactor=None</em>, <em>yfactor=None</em>, <em>movie=&quot;&quot;</em>, <em>fps=10</em>, <em>dpi=100</em>, <em>saveAs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>All arguments are identical to those of <code class="docutils literal"><span class="pre">plot</span></code>, with the addition of:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">movie</span></code>: name of a file to create a movie, such as <code class="docutils literal"><span class="pre">&quot;movie.avi&quot;</span></code></dt>
+<dd><div class="first last line-block">
+<div class="line">If <code class="docutils literal"><span class="pre">movie=&quot;&quot;</span></code> no movie is created.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">fps</span></code>: number of frames per second (only if movie requested).</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">dpi</span></code>: number of dots per inch (only if movie requested).</p>
+</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">animate</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="simultaneous-plotting-of-multiple-diagnostics">
+<h2>Simultaneous plotting of multiple diagnostics<a class="headerlink" href="#simultaneous-plotting-of-multiple-diagnostics" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="multiPlot">
+<code class="descname">multiPlot</code><span class="sig-paren">(</span><em>diag1</em>, <em>diag2</em>, <em>...</em>, <em>figure=1</em>, <em>shape=None</em>, <em>movie=&quot;&quot;</em>, <em>fps=15</em>, <em>dpi=200</em>, <em>saveAs=None</em>, <em>skipAnimation=False</em><span class="sig-paren">)</span><a class="headerlink" href="#multiPlot" title="Permalink to this definition">¶</a></dt>
+<dd><ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">diag1</span></code>, <code class="docutils literal"><span class="pre">diag2</span></code>, etc.</dt>
+<dd><div class="first last line-block">
+<div class="line">Diagnostics prepared by <code class="docutils literal"><span class="pre">Scalar()</span></code>, <code class="docutils literal"><span class="pre">Field()</span></code>, <code class="docutils literal"><span class="pre">Probe()</span></code> or <code class="docutils literal"><span class="pre">ParticleDiagnostic()</span></code></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">figure</span></code>: The figure number that is passed to matplotlib.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">shape</span></code>: The arrangement of plots inside the figure.</dt>
+<dd><div class="first last line-block">
+<div class="line">For instance, <code class="docutils literal"><span class="pre">[2,</span> <span class="pre">1]</span></code> makes two plots stacked vertically, and <code class="docutils literal"><span class="pre">[1,</span> <span class="pre">2]</span></code> makes two plots stacked horizontally. If absent, stacks plots vertically.</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">movie</span></code> : filename to create a movie.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">fps</span></code> : frames per second for the movie.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">dpi</span></code> : resolution of the movie.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">saveAs</span></code>: name of a directory where to save each frame as figures.
+You can even specify a filename such as <code class="docutils literal"><span class="pre">mydir/prefix.png</span></code> and it will automatically
+make successive files showing the timestep: <code class="docutils literal"><span class="pre">mydir/prefix0.png</span></code>, <code class="docutils literal"><span class="pre">mydir/prefix1.png</span></code>, etc.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">skipAnimation</span></code> : True/False toggles going directly to the last frame.</p>
+</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">Probe</span><span class="p">(</span><span class="n">probeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;Ex&quot;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="n">diagNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">multiPlot</span><span class="p">(</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="mi">1</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<blockquote>
+<div>This plots a probe and a particle diagnostic on the same figure, and makes an animation for all available timesteps.</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="advanced-plotting-options">
+<h2>Advanced plotting options<a class="headerlink" href="#advanced-plotting-options" title="Permalink to this headline">¶</a></h2>
+<p>In addition to <code class="docutils literal"><span class="pre">figure</span></code>, <code class="docutils literal"><span class="pre">vmin</span></code>, <code class="docutils literal"><span class="pre">vmax</span></code>, <code class="docutils literal"><span class="pre">xmin</span></code>, <code class="docutils literal"><span class="pre">xmax</span></code>, <code class="docutils literal"><span class="pre">ymin</span></code> and <code class="docutils literal"><span class="pre">ymax</span></code>,
+there are many more optional arguments. They are directly passed to the <em>matplotlib</em> package.</p>
+<p>Options for the figure: <code class="docutils literal"><span class="pre">figsize</span></code>, <code class="docutils literal"><span class="pre">dpi</span></code>, <code class="docutils literal"><span class="pre">facecolor</span></code>, <code class="docutils literal"><span class="pre">edgecolor</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.figure">matplotlib&#8217;s figure options</a>.</div></blockquote>
+<p>Options for the axes frame: <code class="docutils literal"><span class="pre">aspect</span></code>, <code class="docutils literal"><span class="pre">axis_bgcolor</span></code>, <code class="docutils literal"><span class="pre">frame_on</span></code>, <code class="docutils literal"><span class="pre">position</span></code>, <code class="docutils literal"><span class="pre">title</span></code>, <code class="docutils literal"><span class="pre">visible</span></code>,
+<code class="docutils literal"><span class="pre">xlabel</span></code>, <code class="docutils literal"><span class="pre">xscale</span></code>, <code class="docutils literal"><span class="pre">xticklabels</span></code>, <code class="docutils literal"><span class="pre">xticks</span></code>, <code class="docutils literal"><span class="pre">ylabel</span></code>, <code class="docutils literal"><span class="pre">yscale</span></code>, <code class="docutils literal"><span class="pre">yticklabels</span></code>, <code class="docutils literal"><span class="pre">yticks</span></code>, <code class="docutils literal"><span class="pre">zorder</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes.set">matplotlib&#8217;s axes options</a>.</div></blockquote>
+<p>Options for the lines: <code class="docutils literal"><span class="pre">color</span></code>, <code class="docutils literal"><span class="pre">dashes</span></code>, <code class="docutils literal"><span class="pre">drawstyle</span></code>, <code class="docutils literal"><span class="pre">fillstyle</span></code>, <code class="docutils literal"><span class="pre">label</span></code>, <code class="docutils literal"><span class="pre">linestyle</span></code>, <code class="docutils literal"><span class="pre">linewidth</span></code>,
+<code class="docutils literal"><span class="pre">marker</span></code>, <code class="docutils literal"><span class="pre">markeredgecolor</span></code>, <code class="docutils literal"><span class="pre">markeredgewidth</span></code>, <code class="docutils literal"><span class="pre">markerfacecolor</span></code>, <code class="docutils literal"><span class="pre">markerfacecoloralt</span></code>,
+<code class="docutils literal"><span class="pre">markersize</span></code>, <code class="docutils literal"><span class="pre">markevery</span></code>, <code class="docutils literal"><span class="pre">visible</span></code>, <code class="docutils literal"><span class="pre">zorder</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot">matplotlib&#8217;s line options</a>.</div></blockquote>
+<p>Options for the image: <code class="docutils literal"><span class="pre">cmap</span></code>, <code class="docutils literal"><span class="pre">aspect</span></code>, <code class="docutils literal"><span class="pre">interpolation</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.imshow">matplotlib&#8217;s image options</a>.</div></blockquote>
+<p>Options for the colorbar: <code class="docutils literal"><span class="pre">cbaspect</span></code>, <code class="docutils literal"><span class="pre">orientation</span></code>, <code class="docutils literal"><span class="pre">fraction</span></code>, <code class="docutils literal"><span class="pre">pad</span></code>, <code class="docutils literal"><span class="pre">shrink</span></code>, <code class="docutils literal"><span class="pre">anchor</span></code>, <code class="docutils literal"><span class="pre">panchor</span></code>,
+<code class="docutils literal"><span class="pre">extend</span></code>, <code class="docutils literal"><span class="pre">extendfrac</span></code>, <code class="docutils literal"><span class="pre">extendrect</span></code>, <code class="docutils literal"><span class="pre">spacing</span></code>, <code class="docutils literal"><span class="pre">ticks</span></code>, <code class="docutils literal"><span class="pre">format</span></code>, <code class="docutils literal"><span class="pre">drawedges</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.colorbar">matplotlib&#8217;s colorbar options</a>.</div></blockquote>
+<p>Options for the tick labels: <code class="docutils literal"><span class="pre">style_x</span></code>, <code class="docutils literal"><span class="pre">scilimits_x</span></code>, <code class="docutils literal"><span class="pre">useOffset_x</span></code>, <code class="docutils literal"><span class="pre">style_y</span></code>, <code class="docutils literal"><span class="pre">scilimits_y</span></code>, <code class="docutils literal"><span class="pre">useOffset_y</span></code></p>
+<blockquote>
+<div>Please refer to <a class="reference external" href="http://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes.ticklabel_format">matplotlib&#8217;s tick options</a>.</div></blockquote>
+<p><strong>Example</strong>:</p>
+<blockquote>
+<div><p>To choose a gray colormap of the image, use <code class="docutils literal"><span class="pre">cmap=&quot;gray&quot;</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span> <span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+<blockquote>
+<div>Many colormaps are available from the <em>matplotlib</em> package. With <code class="docutils literal"><span class="pre">cmap=&quot;&quot;</span></code>, you will get a list of available colormaps.
+Smilei&#8217;s default colormap should have the names: <code class="docutils literal"><span class="pre">smilei</span></code>, <code class="docutils literal"><span class="pre">smilei_r</span></code>, <code class="docutils literal"><span class="pre">smileiD</span></code> and <code class="docutils literal"><span class="pre">smileiD_r</span></code>.</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="update-the-plotting-options">
+<h2>Update the plotting options<a class="headerlink" href="#update-the-plotting-options" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="Smilei.Scalar.set">
+<code class="descclassname">Smilei.Scalar.</code><code class="descname">set</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Scalar.set" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Field.set">
+<code class="descclassname">Smilei.Field.</code><code class="descname">set</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Field.set" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Probe.set">
+<code class="descclassname">Smilei.Probe.</code><code class="descname">set</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Probe.set" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.ParticleDiagnostic.set">
+<code class="descclassname">Smilei.ParticleDiagnostic.</code><code class="descname">set</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.ParticleDiagnostic.set" title="Permalink to this definition">¶</a></dt>
+<dt id="Smilei.Screen.set">
+<code class="descclassname">Smilei.Screen.</code><code class="descname">set</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#Smilei.Screen.set" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;path/to/my/results&quot;</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="n">diagNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span> <span class="n">figure</span><span class="o">=</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">set</span><span class="p">(</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<p>Before you start this tutorial, <a class="reference internal" href="run.html#run"><span class="std std-ref">learn how to run Smilei</span></a>.</p>
+<p class="rubric">1. Running the test case</p>
+<p>In the <code class="docutils literal"><span class="pre">benchmarks</span></code> directory, we provide a test case <code class="docutils literal"><span class="pre">tst1d_6_particle_diagnostic.py</span></code>.
+This case is very simple: it consists of a one-dimensional uniform neutral
+plasma composed by ions and electrons. The electrons all have a drift velocity of
+<span class="math">\(0.05c\)</span>.</p>
+<p>Run this case using <strong class="program">smilei</strong> and collect the results in a directory
+of your choice. In this tutorial, we suppose that the results are in the directory
+<code class="docutils literal"><span class="pre">benchmarks/tst1d_6_particle_diagnostic</span></code>. You may use the script <code class="docutils literal"><span class="pre">smilei.sh</span></code>
+to achieve that:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">smilei</span><span class="o">.</span><span class="n">sh</span> <span class="n">benchmarks</span><span class="o">/</span><span class="n">tst1d_6_diagnostics</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p class="rubric">2. Starting python and getting some general information</p>
+<p>From the same terminal, launch <em>python</em> using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span>
+</pre></div>
+</div>
+<p>You are now in the <em>python</em> prompt.
+Open the simulation using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Smilei</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">=</span><span class="n">Smilei</span><span class="p">(</span><span class="s2">&quot;benchmarks/tst1d_6_diagnostics&quot;</span><span class="p">)</span>
+<span class="go">Loaded simulation &#39;benchmarks/tst1d_6_diagnostics&#39;</span>
+</pre></div>
+</div>
+<p>Print the list of available species using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">S</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">Species</span><span class="p">:</span> <span class="nb">print</span> <span class="n">species</span><span class="o">.</span><span class="n">species_type</span>
+<span class="gp">...</span>
+<span class="go">ion1</span>
+<span class="go">electron1</span>
+</pre></div>
+</div>
+<p>Print the list of available <code class="docutils literal"><span class="pre">Scalar</span></code> diagnostics:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">Scalar</span><span class="p">()</span>
+<span class="go">Diagnostic is invalid</span>
+<span class="go">Printing available scalars:</span>
+<span class="go">---------------------------</span>
+<span class="go">      Utot    Ubal    Ukin</span>
+</pre></div>
+</div>
+<p>Print the list of available <code class="docutils literal"><span class="pre">Field</span></code> diagnostics:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">Diagnostic is invalid</span>
+<span class="go">Printing available fields:</span>
+<span class="go">--------------------------</span>
+<span class="go">               Ex               Ey               Ez</span>
+<span class="go">    Rho_electron1         Rho_ion1</span>
+</pre></div>
+</div>
+<p>Print the list of available <code class="docutils literal"><span class="pre">ParticleDiagnostic</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">()</span>
+<span class="go">Diagnostic is invalid</span>
+<span class="go">Printing available particle diagnostics:</span>
+<span class="go">----------------------------------------</span>
+<span class="go">Diag#0 - density of species # 1</span>
+<span class="go">    Averaging over 2 timesteps</span>
+<span class="go">    x from 0.0 to 6.28319 in 100 steps</span>
+<span class="go">    vx from -0.1 to 0.1 in 100 steps</span>
+<span class="go">Diag#1 - density of species # 0</span>
+<span class="go">    x from 0.0 to 6.28319 in 100 steps</span>
+<span class="go">    vx from -0.001 to 0.001 in 100 steps</span>
+<span class="go">Diag#2 - px_density of species # 1</span>
+<span class="go">    Averaging over 2 timesteps</span>
+<span class="go">    x from 0.0 to 6.28319 in 100 steps</span>
+<span class="go">    vx from -0.1 to 0.1 in 100 steps</span>
+<span class="go">Diag#3 - density of species # 1</span>
+<span class="go">    ekin from 0.0001 to 0.1 in 100 steps  [ LOG SCALE ]  [ INCLUDING EDGES ]</span>
+</pre></div>
+</div>
+<p class="rubric">3. Plot a scalar as a function of time</p>
+<p>Let us take the example of the scalar quantity <code class="docutils literal"><span class="pre">Ukin</span></code>, the total kinetic energy.
+It is plotted as a function of time using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">Scalar</span><span class="p">(</span><span class="s2">&quot;Ukin&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure" id="id1">
+<a class="reference internal image-reference" href="_images/Tutorial1.png"><img alt="_images/Tutorial1.png" src="_images/Tutorial1.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 19 </span><span class="caption-text">Kinetic energy as a function of time</span></p>
+</div>
+<p>A window appears showing an oscillation. This is due to the initial non-zero drift velocity
+of the electron, causing a plasma wave.</p>
+<p>If you have the <code class="docutils literal"><span class="pre">Pint</span></code> package installed, you may also choose units for the plot:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">Scalar</span><span class="p">(</span><span class="s2">&quot;Ukin&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;fs&quot;</span><span class="p">,</span><span class="s2">&quot;J&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure" id="id2">
+<a class="reference internal image-reference" href="_images/Tutorial2.png"><img alt="_images/Tutorial2.png" src="_images/Tutorial2.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 20 </span><span class="caption-text">Kinetic energy as a function of time (displaying units)</span></p>
+</div>
+<p class="rubric">4. Plot a particle diagnostic result at <span class="math">\(t=0\)</span></p>
+<p>The particle diagnostic #0, as printed above, contains the density of the species #1
+(electrons) as a function of their position <code class="docutils literal"><span class="pre">x</span></code> and their velocity <code class="docutils literal"><span class="pre">vx</span></code>. In other
+words, it corresponds to the phase-space of the electrons. We can plot this phase-space
+in the initial conditions, using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure" id="id3">
+<a class="reference internal image-reference" href="_images/Tutorial3.png"><img alt="_images/Tutorial3.png" src="_images/Tutorial3.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">Phase-space of electrons at <span class="math">\(t=0\)</span>.</span></p>
+</div>
+<p>A window appears. We can see that the electrons have indeed
+a drift velocity of <span class="math">\(0.05c\)</span>.</p>
+<p>To obtain the equivalent plot for the ions, use the particle diagnostic #1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure" id="id4">
+<a class="reference internal image-reference" href="_images/Tutorial4.png"><img alt="_images/Tutorial4.png" src="_images/Tutorial4.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 22 </span><span class="caption-text">Phase-space of ions at <span class="math">\(t=0\)</span>.</span></p>
+</div>
+<p>The ions clearly have a zero average velocity.</p>
+<p class="rubric">5. Plot a &#8220;slice&#8221; of the array</p>
+<p>The diagnostic #0 that we plotted above is the electron phase-space.
+Let us say we want to sum over the data that is contained between <span class="math">\(x=3\)</span> and 4,
+and plot the result as a function of <span class="math">\(v_x\)</span>.
+This is achieved by the argument <code class="docutils literal"><span class="pre">slice</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]},</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure" id="id5">
+<a class="reference internal image-reference" href="_images/Tutorial5.png"><img alt="_images/Tutorial5.png" src="_images/Tutorial5.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 23 </span><span class="caption-text"><span class="math">\(v_x\)</span> -distribution of electrons contained between <span class="math">\(x=3\)</span> and 4, at <span class="math">\(t=0\)</span>.</span></p>
+</div>
+<p>We can see, again, that the peak is located at <span class="math">\(v_x=0.05c\)</span>.</p>
+<p>Now, let us do the slice on <span class="math">\(v_x\)</span> instead of <span class="math">\(x\)</span>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;vx&quot;</span><span class="p">:</span><span class="s2">&quot;all&quot;</span><span class="p">},</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure" id="id6">
+<a class="reference internal image-reference" href="_images/Tutorial6.png"><img alt="_images/Tutorial6.png" src="_images/Tutorial6.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 24 </span><span class="caption-text"><span class="math">\(x\)</span> -distribution of electrons contained between <span class="math">\(v_x=-0.1\)</span> and <span class="math">\(0.1\)</span>, at <span class="math">\(t=0\)</span>.</span></p>
+</div>
+<p>By choosing <code class="docutils literal"><span class="pre">&quot;all&quot;</span></code> in the argument <code class="docutils literal"><span class="pre">slice</span></code>, all the velocities <span class="math">\(v_x\)</span> are sliced.
+Note the parameters <code class="docutils literal"><span class="pre">vmin</span></code> and <code class="docutils literal"><span class="pre">vmax</span></code> to have clearer plotting limits.
+We obtain a constant density of <span class="math">\(10\,n_c\)</span>, which is consistent with input file.</p>
+<p class="rubric">6. Make animated plots</p>
+<p>To have an animation of the electron phase-space with time, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">animate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You will see the electron velocity oscillate from <span class="math">\(0.05c\)</span> to <span class="math">\(-0.05c\)</span>.
+As explained before, this oscillation corresponds to a plasma wave with infinite wavelength.</p>
+<p>Note that all the available timesteps are animated. If you want to only animate
+between timesteps 20 and 60, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">timesteps</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">60</span><span class="p">]</span> <span class="p">)</span><span class="o">.</span><span class="n">animate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="rubric">7. Make multiple plots on the same figure</p>
+<p>Use the following commands to have the animation with both electrons and ions
+on the same figure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;um&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multiPlot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="figure" id="id7">
+<a class="reference internal image-reference" href="_images/Tutorial7.png"><img alt="_images/Tutorial7.png" src="_images/Tutorial7.png" style="width: 12cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 25 </span><span class="caption-text">Two plots on the same figure.</span></p>
+</div>
+<p>If the two plots are 1D, and are both of the same type, then they will
+automatically be plotted on the same axes. For instance, we can slice one axis, like
+in the previous section:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="s2">&quot;all&quot;</span><span class="p">},</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="s2">&quot;all&quot;</span><span class="p">},</span> <span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">multiPlot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure" id="id8">
+<a class="reference internal image-reference" href="_images/Tutorial8.png"><img alt="_images/Tutorial8.png" src="_images/Tutorial8.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 26 </span><span class="caption-text">Two curves in the same axes.</span></p>
+</div>
+<p class="rubric">8. Make an operation between diagnostics</p>
+<p>Let us now consider the particle diagnostic #2, which is very similar to #0 as it has
+the same axes <span class="math">\(x\)</span> and <span class="math">\(v_x\)</span>, but it has <code class="docutils literal"><span class="pre">ouput=&quot;px_density&quot;</span></code> instead
+of <code class="docutils literal"><span class="pre">ouput=&quot;density&quot;</span></code>. Consequently, if we divide #2 by #0, we will obtain the
+average value <span class="math">\(\left&lt;p_x\right&gt;\)</span> as a function of <span class="math">\(x\)</span> and <span class="math">\(v_x\)</span>.
+To do this operation, we need to indicate <code class="docutils literal"><span class="pre">&quot;#2/#0&quot;</span></code> instead of the diagnostic number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span><span class="o">.</span><span class="n">ParticleDiagnostic</span><span class="p">(</span><span class="s2">&quot;#2/#0&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="s2">&quot;all&quot;</span><span class="p">,</span><span class="s2">&quot;vx&quot;</span><span class="p">:</span><span class="s2">&quot;all&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure" id="id9">
+<a class="reference internal image-reference" href="_images/Tutorial9.png"><img alt="_images/Tutorial9.png" src="_images/Tutorial9.png" style="width: 10cm;" /></a>
+<p class="caption"><span class="caption-number">Fig. 27 </span><span class="caption-text"><span class="math">\(\left&lt;p_x\right&gt;\)</span> as a function of time.</span></p>
+</div>
+<p>Note that we <cite>sliced</cite> both axis to average the result over all particles.
+It results in a plot of <span class="math">\(\left&lt;p_x\right&gt;\)</span> as a function of time.
+This value oscillates, as we have seen previously.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Post-process</a><ul>
+<li><a class="reference internal" href="#open-a-simulation">Open a simulation</a></li>
+<li><a class="reference internal" href="#extract-namelist-information">Extract namelist information</a></li>
+<li><a class="reference internal" href="#open-a-scalar-diagnostic">Open a Scalar diagnostic</a></li>
+<li><a class="reference internal" href="#open-a-field-diagnostic">Open a Field diagnostic</a></li>
+<li><a class="reference internal" href="#open-a-probe-diagnostic">Open a Probe diagnostic</a></li>
+<li><a class="reference internal" href="#open-a-particle-diagnostic">Open a Particle diagnostic</a></li>
+<li><a class="reference internal" href="#open-a-screen-diagnostic">Open a Screen diagnostic</a></li>
+<li><a class="reference internal" href="#open-a-track-diagnostic">Open a Track diagnostic</a></li>
+<li><a class="reference internal" href="#specifying-units">Specifying units</a></li>
+<li><a class="reference internal" href="#obtain-the-data-as-an-array">Obtain the data as an array</a></li>
+<li><a class="reference internal" href="#plot-the-data-at-one-timestep">Plot the data at one timestep</a></li>
+<li><a class="reference internal" href="#plot-the-data-streaked-over-time">Plot the data streaked over time</a></li>
+<li><a class="reference internal" href="#animated-plot">Animated plot</a></li>
+<li><a class="reference internal" href="#simultaneous-plotting-of-multiple-diagnostics">Simultaneous plotting of multiple diagnostics</a></li>
+<li><a class="reference internal" href="#advanced-plotting-options">Advanced plotting options</a></li>
+<li><a class="reference internal" href="#update-the-plotting-options">Update the plotting options</a></li>
+<li><a class="reference internal" href="#tutorial">Tutorial</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/post-processing.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

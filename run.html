@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Run &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Post-process" href="post-processing.html" />
+    <link rel="prev" title="Write a namelist" href="namelist.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="post-processing.html" title="Post-process"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="namelist.html" title="Write a namelist"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="run">
+<span id="id1"></span><h1>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h1>
+<p>Before you launch <strong class="program">Smilei</strong>, <a class="reference internal" href="namelist.html"><span class="doc">write a namelist file</span></a>
+containing all the information of your simulation (grid shape, particles, lasers, diagnostics, etc.).</p>
+<p>You can also start by picking up one simulation from the <code class="docutils literal"><span class="pre">benchmarks</span></code> directory.</p>
+<hr class="docutils" />
+<div class="section" id="the-smilei-executable">
+<h2>The <code class="docutils literal"><span class="pre">smilei</span></code> executable<a class="headerlink" href="#the-smilei-executable" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="compile">Compiling Smilei</a> creates an executable file <code class="docutils literal"><span class="pre">smilei</span></code> in the source directory.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>smilei arg1 arg2 arg3 ...
+</pre></div>
+</div>
+<p>The command-line arguments <code class="docutils literal"><span class="pre">arg1</span></code>, <code class="docutils literal"><span class="pre">arg2</span></code>, <code class="docutils literal"><span class="pre">arg3</span></code> (etc.) can be:</p>
+<ul class="simple">
+<li>the path to a namelist</li>
+<li>any <em>python</em> instruction that you want to execute during the namelist reading.</li>
+</ul>
+<p>For example, you can run your namelist <code class="docutils literal"><span class="pre">my_namelist.py</span></code> and
+add an additional instruction <code class="docutils literal"><span class="pre">print_every=10</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>./smilei  my_namelist.py  <span class="s2">&quot;print_every=10&quot;</span>
+</pre></div>
+</div>
+<p>Note that, in addition, you will generally use the <code class="docutils literal"><span class="pre">mpiexec</span></code> or <code class="docutils literal"><span class="pre">mpirun</span></code> command
+to run <strong class="program">Smilei</strong> on several processors:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mpiexec -np <span class="m">4</span> ./smilei  my_namelist.py  <span class="s2">&quot;print_every=10&quot;</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="directory-management">
+<h2>Directory management<a class="headerlink" href="#directory-management" title="Permalink to this headline">¶</a></h2>
+<p>Let us assume you have written your namelist <code class="docutils literal"><span class="pre">my_namelist.py</span></code>, and that you placed it
+inside your home directory. Also, we assume that the <code class="docutils literal"><span class="pre">Smilei</span></code> directory is also there,
+so that the <code class="docutils literal"><span class="pre">smilei</span></code> executable is located in <code class="docutils literal"><span class="pre">~/Smilei/</span></code>.</p>
+<p>Knowing that <strong class="program">Smilei</strong> generally writes out all the results in the current directory,
+it is recommended to create a new directory to store these results. For instance:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ mkdir ~/my_simulation                     <span class="c1"># New directory to store results</span>
+$ cp ~/my_namelist.py ~/my_simulation       <span class="c1"># Copies the namelist there</span>
+$ <span class="nb">cd</span> ~/my_simulation                        <span class="c1"># Goes there</span>
+$ mpiexec -np <span class="m">4</span> ~/Smilei/smilei my_namelist <span class="c1"># Run with 4 processors</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="using-the-provided-script">
+<h2>Using the provided script<a class="headerlink" href="#using-the-provided-script" title="Permalink to this headline">¶</a></h2>
+<p>For simple cases such as the previous one, use the script <code class="docutils literal"><span class="pre">smilei.sh</span></code>, provided in
+the <cite>Smilei</cite> directory. You only have to run</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./smilei.sh <span class="m">4</span> my_namelist.py
+</pre></div>
+</div>
+<p>where the number 4 says that the code will run on 4 processors. A directory will all
+the results will automatically be created next to your namelist.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="running-on-large-clusters">
+<h2>Running on large clusters<a class="headerlink" href="#running-on-large-clusters" title="Permalink to this headline">¶</a></h2>
+<p>We do not provide instructions to run on super-computers yet. Please refer to your
+administrators.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<p>In case of problems, the code can be compiled with additional debugging flags (usual <code class="docutils literal"><span class="pre">-g</span></code> and <code class="docutils literal"><span class="pre">-O0</span></code>) and internal
+checks by compiling it with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make <span class="nv">config</span><span class="o">=</span>debug
+</pre></div>
+</div>
+<p>Compiling the whole code with this command will make it very slow to run.
+But to check only a particular file for errors, first compile the code with <cite>make</cite>, then
+modify the file, and recompile in debug mode.</p>
+<p>In debug mode, these C++ macros are activated:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DEBUG(&quot;some</span> <span class="pre">text&quot;</span> <span class="pre">[&lt;&lt;</span> <span class="pre">other</span> <span class="pre">streamable])</span></code></li>
+<li><code class="docutils literal"><span class="pre">HEREIAM(&quot;some</span> <span class="pre">text&quot;</span> <span class="pre">[&lt;&lt;</span> <span class="pre">other</span> <span class="pre">streamable])</span></code></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="reporting-bugs">
+<h2>Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permalink to this headline">¶</a></h2>
+<p>To report bugs, please create an issues on the <a class="reference external" href="https://github.com/SmileiPIC/Smilei/issues/new">github page</a> .</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="field_ionization.html">Field ionization</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Run</a><ul>
+<li><a class="reference internal" href="#the-smilei-executable">The <code class="docutils literal"><span class="pre">smilei</span></code> executable</a></li>
+<li><a class="reference internal" href="#directory-management">Directory management</a></li>
+<li><a class="reference internal" href="#using-the-provided-script">Using the provided script</a></li>
+<li><a class="reference internal" href="#running-on-large-clusters">Running on large clusters</a></li>
+<li><a class="reference internal" href="#debugging">Debugging</a></li>
+<li><a class="reference internal" href="#reporting-bugs">Reporting bugs</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/run.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>

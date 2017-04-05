@@ -1,0 +1,484 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Field ionization &#8212; Smilei v3.1-13-g4b28628b
+ documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/smileitheme.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v3.1-13-g4b28628b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/smileiIcon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Install" href="installation.html" />
+    <link rel="prev" title="Binary collisions" href="collisions.html" />
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"]
+    }
+  });
+  </script>
+  
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="installation.html" title="Install"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="collisions.html" title="Binary collisions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Smilei</a> &#187;</li>
+      </ul>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="field-ionization">
+<h1>Field ionization<a class="headerlink" href="#field-ionization" title="Permalink to this headline">¶</a></h1>
+<p>Field ionization is a process of particular importance for laser-plasma interaction
+in the ultra-high intensity regime.
+It can affect ion acceleration driven by irradiating a solid target with
+an ultra-intense laser, or can be used to inject electrons through
+the accelerating field in laser wakefield acceleration.
+This process is not described in the standard PIC (Vlasov-Maxwell) formulation,
+and an <em>ad hoc</em> description needs to be implemented.
+A Monte-Carlo module for field ionization has thus been developed in <strong class="program">Smilei</strong>,
+closely following the method proposed in <a class="reference internal" href="material.html#nuter2011" id="id1">[Nuter2011]</a>.</p>
+<hr class="docutils" />
+<div class="section" id="physical-model">
+<h2>Physical model<a class="headerlink" href="#physical-model" title="Permalink to this headline">¶</a></h2>
+<p>This scheme relies on the quasi-static rate for tunnel ionization derived in
+<a class="reference internal" href="material.html#perelomov1966" id="id2">[Perelomov1966]</a>, <a class="reference internal" href="material.html#perelomov1967" id="id3">[Perelomov1967]</a> and <a class="reference internal" href="material.html#ammosov1986" id="id4">[Ammosov1986]</a>.
+Considering an ion with atomic number <span class="math">\(Z\)</span> being ionized from charge state
+<span class="math">\(Z^\star-1\)</span> to <span class="math">\(Z^\star \le Z\)</span> in an electric field <span class="math">\(\mathbf{E}\)</span>
+of magnitude <span class="math">\(\vert E\vert\)</span>, the ionization rate reads:</p>
+<div class="math" id="equation-ionizationRate">
+<span class="eqno">(1)<a class="headerlink" href="#equation-ionizationRate" title="Permalink to this equation">¶</a></span>\[\Gamma_{\rm qs} = A_{n^\star,l^\star}\,B_{l,\vert m\vert}\,
+I_p\,\left( \frac{2 (2 I_p)^{3/2}}{\vert E\vert} \right)^{2n^\star-\vert m \vert -1}\,
+\exp\!\left( -\frac{2 (2 I_p)^{3/2}}{3 \vert E\vert}  \right)\,,\]</div>
+<p>where <span class="math">\(I_p\)</span> is the <span class="math">\(Z^{\star}-1\)</span> ionization potential of the ion,
+<span class="math">\(n^\star=Z^\star/\sqrt{2 I_p}\)</span> and <span class="math">\(l^\star=n^\star-1\)</span> denote
+the effective principal quantum number and angular momentum,
+and <span class="math">\(l\)</span> and <span class="math">\(m\)</span> denote the angular momentum and its projection on
+the laser polarization direction, respectively.
+<span class="math">\(\Gamma_{\rm qs}\)</span>, <span class="math">\(I_p\)</span> and <span class="math">\(E\)</span> are here expressed in atomic units
+The coefficients <span class="math">\(A_{n^\star,l^\star}\)</span> and <span class="math">\(B_{l,\vert m\vert}\)</span> are given by:</p>
+<div class="math">
+\[\begin{split}\begin{array}{lll}
+A_{n^\star,l^\star}&amp;=&amp; \frac{2^{2n^\star}}{n^\star\,\Gamma(n^\star+l^\star+1)\,\Gamma(n^\star-l^\star)},\\
+B_{l,\vert m\vert} &amp;=&amp; \frac{(2l+1)(l+\vert m\vert)!}{2^{\vert m\vert} \vert m\vert! (l-\vert m\vert)!}\,,
+\end{array}\end{split}\]</div>
+<p>where <span class="math">\(\Gamma(x)\)</span> is the gamma function.
+Note that considering an electric field <span class="math">\(E=\vert E\vert\,\cos(\omega t)\)</span>
+oscillating in time at the frequency <span class="math">\(\omega\)</span>, averaging Eq. <a class="reference internal" href="#equation-ionizationRate">(1)</a>
+over a period <span class="math">\(2\pi/\omega\)</span> leads to the well-known cycle-averaged ionization rate:</p>
+<div class="math" id="equation-ADKrate">
+<span class="eqno">(2)<a class="headerlink" href="#equation-ADKrate" title="Permalink to this equation">¶</a></span>\[\Gamma_{\rm ADK} = \sqrt{\frac{6}{\pi}}A_{n^\star,l^\star}\,B_{l,\vert m\vert}
+\,I_p\,\left( \frac{2 (2 I_p)^{3/2}}{\vert E\vert} \right)^{2n^\star-\vert m \vert -3/2}\,
+\exp\!\left( -\frac{2 (2 I_p)^{3/2}}{3 \vert E\vert}  \right)\,.\]</div>
+<p>In <strong class="program">Smilei</strong>, following <a class="reference internal" href="material.html#nuter2011" id="id5">[Nuter2011]</a>, the ionization rate of <a class="reference internal" href="#equation-ionizationRate">(1)</a>
+is computed for <span class="math">\(\vert m \vert=0\)</span> only.
+Indeed, as shown in <a class="reference internal" href="material.html#ammosov1986" id="id6">[Ammosov1986]</a>, the ratio <span class="math">\(R\)</span> of the ionization rate
+computed for <span class="math">\(\vert m\vert=0\)</span> by the rate computed for <span class="math">\(\vert m\vert=1\)</span> is:</p>
+<div class="math">
+\[R = \frac{\Gamma_{{\rm qs},\vert m \vert = 0}}{\Gamma_{{\rm qs},\vert m \vert = 1}}
+=  2\frac{(2\,I_p)^{3/2}}{\vert E\vert}
+\simeq 7.91\,10^{-3} \,\,\frac{(I_p[\rm eV])^{3/2}}{a_0\,\hbar\omega_0[\rm eV]}\,,\]</div>
+<p>where, in the practical units formulation, we have considered ionization
+by a laser with normalized vector potential <span class="math">\(a_0=e\vert E\vert /(m_e c \omega_0)\)</span>,
+and photon energy <span class="math">\(\hbar\omega_0\)</span> in eV.
+Typically, ionization by a laser with wavelength <span class="math">\(1~{\rm \mu m}\)</span>
+(correspondingly <span class="math">\(\hbar \omega_0 \sim 1~{\rm eV}\)</span>) occurs for values
+of <span class="math">\(a_0\ll 1\)</span> (even for large laser intensities for which ionization
+would occur during the rising time of the pulse) while the ionization potential
+ranges from a couple of eV (for electrons on the most external shells)
+up to a few tens of thousands of eV (for electrons on the internal shell
+of high-Z atoms). As a consequence, <span class="math">\(R\gg1\)</span>, and the probability
+of ionization of an electron with magnetic quantum number <span class="math">\(\vert m \vert=0\)</span>
+greatly exceeds that of an electron with <span class="math">\(\vert m \vert = 1\)</span>.</p>
+</div>
+<div class="section" id="monte-carlo-scheme">
+<h2>Monte-Carlo scheme<a class="headerlink" href="#monte-carlo-scheme" title="Permalink to this headline">¶</a></h2>
+<p>In <strong class="program">Smilei</strong>, tunnel ionization is treated for each species
+(defined by the user as subject to field ionization) right after field interpolation
+and before applying the pusher.
+For all quasi-particles (henceforth referred to as quasi-ion) of the considered species,
+a Monte-Carlo procedure has been implemented that allows to treat multiple ionization
+events in a single timestep. It relies on the cumulative probability derived
+in Ref. <a class="reference internal" href="material.html#nuter2011" id="id7">[Nuter2011]</a>:</p>
+<div class="math">
+\[F_k^{Z^{\star}-1} = \sum_{j=0}^k p_j^{Z^{\star}-1}\,,\]</div>
+<p>to ionize from 0 to <span class="math">\(k\)</span> times a quasi-ion with initial charge state
+<span class="math">\(Z^{\star}-1\)</span> during a simulation timestep <span class="math">\(\Delta t\)</span>,
+<span class="math">\(p_j^{Z^{\star}-1}\)</span> being the probability to ionize exactly <span class="math">\(j\)</span> times this ion.</p>
+<p>The Monte-Carlo procedure proceeds as follows.
+A random number <span class="math">\(r\)</span> with uniform distribution between 0 and 1 is picked.
+If <span class="math">\(r\)</span> is smaller than the probability <span class="math">\(p_0^{Z^{\star}-1}\)</span>
+to not ionize the quasi-ion, then the quasi-ion is not ionized during this time step.
+Otherwise, we loop over the number of ionization events <span class="math">\(k\)</span>,
+from <span class="math">\(k=1\)</span> to <span class="math">\(k_{\rm max}=Z-Z^{\star}+1\)</span>
+(for which <span class="math">\(F_{k_{\rm max}}^{Z^{\star}-1}=1\)</span> by construction),
+until <span class="math">\(r&lt;F_k^{Z^{\star}-1}\)</span>. At that point, <span class="math">\(k\)</span> is the number of
+ionization events for the quasi-ion. A quasi-electron is created with
+the numerical weight equal to <span class="math">\(k\)</span> times that of the quasi-ion,
+and with the same velocity as this quasi-ion.
+The quasi-ion charge is also increased by <span class="math">\(k\)</span>.</p>
+<p>Finally, to ensure energy conservation, an ionization current
+<span class="math">\({\bf J}_{\rm ion}\)</span> is projected onto the simulation grid such that</p>
+<div class="math">
+\[{\bf J}_{\rm ion} \cdot {\bf E} = \Delta t^{-1}\,\sum_{j=1}^k I_p(Z^{\star}-1+k)\,.\]</div>
+</div>
+<div class="section" id="benchmarks">
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this headline">¶</a></h2>
+<p>In what follows, we present two benchmarks of the field ionization model
+implemented in <strong class="program">Smilei</strong>.
+Both benchmarks consist in irradiating a thin (one cell long) neutral material (hydrogen or carbon)
+with a short (few optical-cycle long) laser with wavelength <span class="math">\(\lambda_0 = 0.8~{\mu m}\)</span>.</p>
+<div class="figure" id="id8">
+<span id="fieldionization"></span><img alt="_images/FieldIonization.png" src="_images/FieldIonization.png" />
+<p class="caption"><span class="caption-number">Fig. 18 </span><span class="caption-text">Results of two benchmarks for the field ionization Model.
+Top: Average charge state of hydrogen ions as a function of time when irradiated by a laser.
+The red solid line corresponds to PIC results, the dashed line corresponds to
+theoretical predictions using the cycle-averaged ADK growth rate of <a class="reference internal" href="#equation-ADKrate">(2)</a>.
+Bottom: Relative distribution of carbon ions for different charge states as a function
+of time. Dashed lines correspond to PIC results, thin gray lines correspond to
+theoretical predictions obtained from <a class="reference internal" href="#equation-rateEqs">(3)</a>. The Gaussian gray shape
+indicates the laser electric field envelope.</span></p>
+</div>
+<p>In the first benchmark, featuring hydrogen, the laser intensity is kept constant
+at <span class="math">\(I_L = 10^{14}~{\rm W/cm^2}\)</span>, corresponding to a normalized vector
+potential <span class="math">\(a_0 \simeq 6.81 \times 10^{-3}\)</span>, over 10 optical cycles.
+The resulting averaged ion charge in the simulation is presented as a function of
+time in <a class="reference internal" href="#fieldionization"><span class="std std-numref">Fig. 18</span></a> (top). It is found to be in excellent agreement
+with the theoretical prediction considering the cycle averaged ionization rate
+<span class="math">\(\Gamma_{\rm ADK} \simeq 2.55\times10^{12}~{\rm s^{-1}}\)</span> computed
+from <a class="reference internal" href="#equation-ADKrate">(2)</a>.</p>
+<p>The second benchmark features carbon ions. The laser has a peak intensity
+<span class="math">\(I_L = 5 \times 10^{16}~{\rm W/cm^2}\)</span>, corresponding to a normalized
+vector potential <span class="math">\(a_0 \simeq 1.52 \times 10^{-1}\)</span>, and a gaussian time profile
+with FWHM <span class="math">\(\tau_L=5~\lambda_0/c\)</span> (in terms of
+electric field). <a class="reference internal" href="#fieldionization"><span class="std std-numref">Fig. 18</span></a> (bottom) shows, as function of time,
+the relative distribution of carbon ions for different charge states
+(from 0 to <span class="math">\(+4\)</span>). These numerical results are shown to be in excellent
+agreement with theoretical predictions obtained by numerically solving the coupled
+rate equations on the population <span class="math">\(N_i\)</span> of each level <span class="math">\(i\)</span>:</p>
+<div class="math" id="equation-rateEqs">
+<span class="eqno">(3)<a class="headerlink" href="#equation-rateEqs" title="Permalink to this equation">¶</a></span>\[\frac{d}{dt}N_i =
+(1-\delta_{i,0}) \, \Gamma_{i-1}\,N_{i-1}  -  (1-\delta_{i,Z})\, \Gamma_{i}\,N_{i}\,,\]</div>
+<p>with <span class="math">\(\delta_{i,j}\)</span> the Kroenecker delta, and <span class="math">\(\Gamma_i\)</span> the ionization
+rate of level <span class="math">\(i\)</span>. Note also that, for this configuration,
+<span class="math">\(\Delta t \simeq 0.04~{\rm fs}\)</span> is about ten times larger than
+the characteristic time <span class="math">\(\Gamma_{\rm ADK}^{-1} \simeq 0.006~{\rm fs}\)</span>
+to ionize <span class="math">\({\rm C}^{2+}\)</span> and <span class="math">\({\rm C}^{3+}\)</span>
+so that multiple ionization from <span class="math">\({\rm C}^{2+}\)</span> to <span class="math">\({\rm C}^{4+}\)</span>
+during a single timestep does occur and is found to be correctly accounted for
+in our simulations.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/smileiLogo.svg" alt="Logo"/>
+            </a></p>
+
+
+
+
+
+
+
+<div class="toctree-smilei">
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="licence.html">Licence</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="synopsis.html">Synopsis</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="highlights.html">Highlights</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="releases.html">Releases</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="units.html">Units</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="algorithms.html">PIC algorithms</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="parallelization.html">Parallelization basics</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="collisions.html">Binary collisions</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+        <ul>
+<li><a class="reference internal" href="#">Field ionization</a><ul>
+<li><a class="reference internal" href="#physical-model">Physical model</a></li>
+<li><a class="reference internal" href="#monte-carlo-scheme">Monte-Carlo scheme</a></li>
+<li><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
+</ul>
+</li>
+</ul>
+
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="installation.html">Install</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="namelist.html">Write a namelist</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="run.html">Run</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="post-processing.html">Post-process</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    <hr />
+    
+    
+      <ul>
+      <li>
+        <a href="material.html">Material</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href="partners.html">Partners</a>
+      </li>
+      </ul>
+    
+
+    
+    
+    
+    
+    
+      <ul>
+      <li>
+        <a href=""></a>
+      </li>
+      </ul>
+    
+
+</div>
+
+
+<br />
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+<h3>Partners</h3>
+
+
+<div class="lablogos">
+  <div>
+  <a href="http://www.maisondelasimulation.fr"><img src="_static/labs/mdls.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.luli.polytechnique.fr"><img src="_static/labs/luli.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.lpp.fr"><img src="_static/labs/lpp.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://polywww.in2p3.fr"><img src="_static/labs/llr.png" border="0" width=100px/> </a>
+  </div>
+  <div>
+  <a href="http://www.idris.fr"><img src="_static/labs/idris.png" border="0" width=100px/> </a>
+  </div>
+  <br class="clear" />
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+        Last updated on Apr 05, 2017
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/field_ionization.rst.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+  </body>
+</html>
